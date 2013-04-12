@@ -5,38 +5,43 @@ title: 什么叫手艺
 {% include JB/setup %}
 
 
-## Update Author Attributes
+从前 现在 过去 再不来
 
-In `_config.yml` remember to specify your own data:
-    
-    title : My Blog =)
-    
-    author :
-      name : Name Lastname
-      email : blah@email.test
-      github : @@
-      twitter : @@
+红红 落叶 长埋 尘土内
 
-The theme should reference these variables whenever needed.
-    
-## Sample Posts
+开始终结总是 没变改
 
-This blog contains sample posts which help stage pages and blog data.
-When you don't need the samples anymore just delete the `_posts/core-samples` folder.
+天边的你飘过 白云外
 
-    $ rm -rf _posts/core-samples
+苦海 不辨爱恨
 
-Here's a sample "posts list".
+在世间 难逃避命运
 
-<ul class="posts">
-  {% for post in site.posts %}
-    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
-  {% endfor %}
-</ul>
+真心 竟不可接近
 
-## To-Do
+但我应该 相信是缘分
 
-This theme is still unfinished. If you'd like to be added as a contributor, [please fork](http://github.com/plusjade/jekyll-bootstrap)!
-We need to clean up the themes, make theme usage guides with theme-specific markup examples.
+情人 别后 永远 再不问(消散的情缘)
 
+无言 独坐 放眼 尘世外(愿来日再续)
+
+鲜花虽会凋谢(只愿) 但会再开(为你)
+
+一生所爱隐约(守候) 在白云外(期待)
+
+苦海 不拘爱恨
+
+在世间 难逃避命运
+
+真心 竟不可接近
+
+或我应该 相信是缘分
+
+苦海 不计爱恨
+
+在世间 难逃避命运
+
+真心 竟不可接近
+
+或我应该 相信是缘分
 
