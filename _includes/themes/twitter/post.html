@@ -8,6 +8,9 @@
       <span>{{ page.date | date_to_long_string }}</strong>
     </div>
 	-->
+	<div class="date">
+		<span>{{ page.date | date: "%Y-%m-%d" }}</span>
+	</div>
     <div class="content">
       {{ content }}
     </div>
