@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 什么叫手艺
+title: 一生所爱
 ---
 {% include JB/setup %}
 
