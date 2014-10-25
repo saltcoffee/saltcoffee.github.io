@@ -21,10 +21,10 @@ Usage:
   {% include custom/posts_collate %}
 {% else %}
   {% for post in posts_collate  %}
-    {% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
-    {% capture this_month %}{{ post.date | date: "%m" }}{% endcapture %}
-    {% capture next_year %}{{ post.previous.date | date: "%Y" }}{% endcapture %}
-    {% capture next_month %}{{ post.previous.date | date: "%m" }}{% endcapture %}
+    {% capture this_year %}{{ post.date | date: "%Y" }}年{% endcapture %}
+    {% capture this_month %}{{ post.date | date: "%m" }}月{% endcapture %}
+    {% capture next_year %}{{ post.previous.date | date: "%Y" }}年{% endcapture %}
+    {% capture next_month %}{{ post.previous.date | date: "%m" }}月{% endcapture %}
   
     {% if forloop.first %}
       <h2>{{this_year}}年</h2>
