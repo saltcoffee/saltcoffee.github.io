@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <meta
+    name="description"
+    content="“还爱不？”App 隐私政策"
+  >
+  <title>“还爱不？”隐私政策</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f8fafc;
+      --surface: rgba(255, 255, 255, 0.88);
+      --text: #0d3157;
+      --secondary-text: #6e7c89;
+      --accent: #84b1f0;
+      --border: rgba(13, 49, 87, 0.1);
+      --shadow: 0 18px 55px rgba(13, 49, 87, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--background);
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Text",
+        "PingFang SC",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+      line-height: 1.75;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at 8% 30%,
+          rgba(244, 178, 141, 0.16),
+          transparent 34rem
+        ),
+        radial-gradient(
+          circle at 92% 22%,
+          rgba(132, 177, 240, 0.18),
+          transparent 36rem
+        ),
+        var(--background);
+    }
+
+    main {
+      width: min(100% - 32px, 820px);
+      margin: 0 auto;
+      padding:
+        max(52px, env(safe-area-inset-top))
+        0
+        max(64px, env(safe-area-inset-bottom));
+    }
+
+    header {
+      margin-bottom: 32px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--secondary-text);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      box-shadow:
+        9px 0 0 -4px rgba(244, 178, 141, 0.75);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(32px, 7vw, 48px);
+      line-height: 1.2;
+      letter-spacing: -0.035em;
+    }
+
+    .updated-at {
+      margin: 0;
+      color: var(--secondary-text);
+      font-size: 14px;
+    }
+
+    .intro,
+    section {
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .intro {
+      margin-bottom: 20px;
+      padding: 24px;
+      font-size: 17px;
+    }
+
+    section {
+      margin-top: 16px;
+      padding: 24px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 21px;
+      line-height: 1.4;
+      letter-spacing: -0.015em;
+    }
+
+    p {
+      margin: 12px 0 0;
+    }
+
+    p:first-of-type {
+      margin-top: 0;
+    }
+
+    footer {
+      padding: 32px 8px 0;
+      color: var(--secondary-text);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 560px) {
+      main {
+        width: min(100% - 24px, 820px);
+        padding-top: max(36px, env(safe-area-inset-top));
+      }
+
+      .intro,
+      section {
+        padding: 20px;
+        border-radius: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <div class="brand" aria-label="还爱不？">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>还爱不？</span>
+      </div>
+
+      <h1>隐私政策</h1>
+      <p class="updated-at">
+        更新日期：2026 年 8 月 31 日
+      </p>
+    </header>
+
+    <div class="intro">
+      “还爱不？”重视你的隐私。本政策说明 App 为实现每日回答、
+      邮件通知和连续三天未回答提醒所处理的信息。
+    </div>
+
+    <section>
+      <h2>保存在设备上的信息</h2>
+
+      <p>
+        你选择的“爱”“不知道”“不爱”及回答日期保存在本机，
+        用于展示当天状态和历史记录。
+      </p>
+
+      <p>
+        TA 的名字、联系邮箱、关系标识和关系恢复凭据保存在系统
+        Keychain；提醒、隐私开关等偏好保存在设备设置中。
+      </p>
+    </section>
+
+    <section>
+      <h2>发送到服务器的信息</h2>
+
+      <p>
+        启用自动通知时，服务器会处理随机生成的安装标识和关系标识、
+        关系恢复凭据的不可逆摘要、当前时区，以及通知所需的 TA
+        名字和邮箱。
+      </p>
+
+      <p>
+        TA 的名字和邮箱在数据库中加密保存，邮箱还会生成不可逆摘要，
+        用于限流和阻止通知。
+      </p>
+
+      <p>
+        选择“爱”或“不知道”时，服务器只接收“当天已回答”及日期、
+        时区，不接收具体答案。选择“不爱”并确认后，服务器会知道
+        这是一次“不爱”通知请求，以便发送对应邮件。
+      </p>
+
+      <p>
+        为防止重复发送和滥用，服务器还会处理请求幂等键、通知状态、
+        发送时间及必要的安全和运行日志。
+      </p>
+    </section>
+
+    <section>
+      <h2>DeviceCheck 与邮件服务</h2>
+
+      <p>
+        真机请求会生成短期 DeviceCheck token，并发送至服务器；
+        服务器将 token 提交给 Apple 验证设备真实性。
+      </p>
+
+      <p>
+        App 不使用该 token 追踪你的跨 App 活动，服务器不持久保存
+        token。
+      </p>
+
+      <p>
+        当你确认选择“不爱”或触发连续三天未回答规则时，TA 的名字、
+        邮箱和通知内容会提供给邮件服务商用于投递。邮件是否最终送达
+        或被阅读，由邮件系统和收件方决定。
+      </p>
+    </section>
+
+    <section>
+      <h2>权限</h2>
+
+      <p>
+        通知权限仅用于你主动开启的每日本地提醒。你可以随时在系统
+        设置中关闭通知。
+      </p>
+
+      <p>
+        生物识别权限仅用于你主动开启的 App 隐私锁。验证结果由系统
+        返回，App 不取得生物识别数据。
+      </p>
+    </section>
+
+    <section>
+      <h2>保存期限与删除</h2>
+
+      <p>
+        有效关系的加密联系人会在自动通知功能启用期间保存。
+        结束关系时，服务器会立即停用监控并清除联系人内容。
+      </p>
+
+      <p>
+        相关空记录、通知记录和发送记录按照服务端清理规则，
+        最多保留 30 天。
+      </p>
+
+      <p>
+        你可以在设置中修改 TA 信息、清除未确认的发送事务，
+        或使用“结束关系”停止监控并删除当前关系资料。
+        历史回答仍保留在本机。
+      </p>
+
+      <p>
+        卸载 App 会删除 SwiftData 历史和普通设置，但系统 Keychain
+        中的关系身份可能在同一设备重装后继续保留。
+        如果希望同时停止服务端监控，请在卸载前使用“结束关系”。
+      </p>
+    </section>
+
+    <section>
+      <h2>共享与使用限制</h2>
+
+      <p>
+        App 不出售个人信息，不接入广告追踪，也不使用每日回答进行
+        画像、评分或关系建议。
+      </p>
+
+      <p>
+        信息只在实现通知、安全校验、反滥用、故障排查和依法履行义务
+        所必需的范围内处理。
+      </p>
+
+      <p>
+        除 Apple DeviceCheck、邮件投递服务及基础托管服务外，
+        不会主动向无关第三方提供相关信息；法律法规要求时除外。
+      </p>
+    </section>
+
+    <section>
+      <h2>关于 TA 的邮箱</h2>
+
+      <p>
+        请只填写你有权联系的邮箱，并确保使用方式合法、适当。
+        通知邮件会提供阻止后续邮件和反滥用渠道。
+      </p>
+    </section>
+
+    <section>
+      <h2>政策更新</h2>
+
+      <p>
+        如信息处理方式发生重要变化，本政策会同步更新，并修改页面
+        顶部的更新日期。继续使用前，你可以随时在 App 设置中查看
+        最新内容。
+      </p>
+    </section>
+
+    <footer>
+      © 2026 还爱不？ · 保留所有权利
+    </footer>
+  </main>
+</body>
+</html>
