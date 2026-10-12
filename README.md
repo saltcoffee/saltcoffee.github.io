@@ -25,11 +25,19 @@ summary: 去公园走了一圈，带上了相机。
 permalink: /articles/weekend-film/
 ```
 
-需要封面时增加 `cover: /img/自己的照片.jpg` 和 `cover_alt: 照片的描述`，首页会显示照片。不设置封面时以文字列表显示。图片可放进 `img` 目录，正文中用 `![描述](/img/自己的照片.jpg)` 引用；使用项目子路径时，写成 `<img src="{{ '/img/自己的照片.jpg' | relative_url }}" alt="照片的描述">`。
+需要封面时增加 `cover: https://example.com/photo.jpg` 和 `cover_alt: 照片的描述`，首页会显示照片。不设置封面时以文字列表显示。正文图片直接使用图床 URL，例如 `![描述](https://example.com/photo.jpg)`。查看器自动支持这些外链，不会把图片下载进仓库。本地图片地址也兼容。
 
 草稿增加 `published: false`，正式发布时移除。独立页面或隐私政策增加 `listed: false`，不进入文章列表、标签、RSS与相邻文章导航。长文可增加 `catalog: true` 自动生成目录。
 
 原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。现有摄影文章迁入 `_articles`，通过 `permalink` 保留旧链接；两份隐私政策也保留原地址。
+
+## 图片浏览
+
+所有文章正文的图片会自动加入图片查看器。以后使用普通 Markdown 的 `![说明](图片地址)` 或 HTML `<img>` 即可，不需要额外 front matter，也不需要填写图片宽高。点击照片，或使用正文里的“浏览照片”按钮，可以打开大图。
+
+桌面支持右侧缩略图、左右按钮、方向键、滚轮翻图、放大和全屏；手机支持左右滑动，缩略图位于下方。按 Esc 或点击关闭后回到文章原位置。图片加载失败时可查看原图或继续翻下一张。
+
+查看器只收集文章正文，不包含头像、评论图片和站点图标。链接到其他页面的图片仍保留原来的链接功能；需要排除某张正文图片时，可给 `<img>` 添加 `data-gallery-ignore`。缩略图可选填 `data-gallery-thumb="缩略图地址"`，不填就使用正文图片 URL，不生成或保存本地缩略图。缩略图按可见范围延迟加载。
 
 ## 评论
 
@@ -82,6 +90,6 @@ bundle exec jekyll build
 
 如果发布在项目子路径（例如 `/blog`），在 `_config.yml` 设置 `baseurl: /blog`，并把 `url` 保持为域名。本站导航、图片、订阅、离线缓存使用相对路径过滤器适配子路径。
 
-样式在 `css/blog.css`，交互在 `js/blog.js`，页面模板在 `_layouts` 和 `_includes`。页面不依赖 Hux、Bootstrap、jQuery 或字体文件，旧主题资源与 Grunt 构建脚本已清理。
+样式在 `css/blog.css`，交互在 `js/blog.js`，图片查看器在 `css/gallery.css` 和 `js/gallery.js`，页面模板在 `_layouts` 和 `_includes`。页面不依赖 Hux、Bootstrap、jQuery 或字体文件，旧主题资源与 Grunt 构建脚本已清理。
 
-36 张胶片图片已保留原画幅、转换为网页尺寸，并配置懒加载；首图提供 960 和 1600 像素的首页封面。图片原片请另外留存，网页版本不替代原片。
+胶片文章的 36 张照片与首页封面沿用原图床 URL，保留原画幅并配置懒加载；仓库只保存文章里的链接。
