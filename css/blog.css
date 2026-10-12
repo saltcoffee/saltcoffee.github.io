@@ -230,6 +230,33 @@ h1, h2, h3, p { margin: 0; }
 
 .post-comments { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
 .post-comments h2 { margin-bottom: 18px; font-size: 18px; font-weight: 600; color: var(--ink); }
-.post-comments .twikoo { max-width: 100%; margin-inline: 0; font-size: 14px; }
-.post-comments .comment-status { color: var(--muted); font-size: 14px; }
-.post-comments noscript p { color: var(--muted); font-size: 14px; }
+.post-comments .twikoo { max-width: 100%; margin-inline: 0; color: var(--text); font: 14px/1.7 var(--sans); }
+.post-comments .twikoo input, .post-comments .twikoo textarea, .post-comments .twikoo button { font-family: var(--sans); }
+.post-comments .twikoo .tk-submit input.tk-input__inner,
+.post-comments .twikoo .tk-submit .tk-input-group__prepend { height: 40px; line-height: 40px; }
+.post-comments .twikoo .tk-submit .tk-input-group__prepend { background: var(--wash); }
+.post-comments .twikoo .tk-submit textarea.tk-input__inner { min-height: 132px; padding: 12px; line-height: 1.8; }
+.post-comments .twikoo .tk-submit .tk-input__inner:focus { border-color: var(--accent); }
+.post-comments .twikoo .tk-input__inner:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.post-comments .twikoo .tk-button--primary { background: var(--accent); border-color: var(--accent); }
+.post-comments .twikoo .tk-button--primary:not(.is-disabled):hover,
+.post-comments .twikoo .tk-button--primary:not(.is-disabled):focus,
+.post-comments .twikoo .tk-button--primary:not(.is-disabled):active { background: var(--ink); border-color: var(--ink); }
+.post-comments .twikoo .tk-button--primary.is-disabled,
+.post-comments .twikoo .tk-button--primary.is-disabled:hover,
+.post-comments .twikoo .tk-button--primary.is-disabled:focus,
+.post-comments .twikoo .tk-button--primary.is-disabled:active { background: var(--accent); border-color: var(--accent); }
+.post-comments .twikoo .tk-action-link,
+.post-comments .twikoo .tk-action-icon,
+.post-comments .twikoo .tk-expand,
+.post-comments .twikoo .tk-nick-link:hover { color: var(--accent); }
+.post-comments .twikoo .tk-comments .tk-extras, .post-comments .twikoo .tk-comments .tk-time { color: var(--muted); }
+.post-comments .twikoo .tk-extra-text { line-height: 1.4; }
+.post-comments .twikoo .tk-content { font-size: 15px; line-height: 1.8; word-break: normal; overflow-wrap: anywhere; }
+.post-comments .twikoo .tk-content p + p { margin-top: .75em; }
+.post-comments .comment-status, .post-comments noscript p { color: var(--muted); font-size: 14px; }
+.comment-retry { color: var(--accent); background: var(--wash); border: 1px solid var(--line); border-radius: 3px; margin-top: 12px; padding: 9px 15px; font-size: 14px; }
+.comment-retry:hover { border-color: var(--accent); }
+@media (max-width: 767px) {
+  .post-comments .twikoo .tk-input input, .post-comments .twikoo .tk-input textarea { font-size: 16px; }
+}

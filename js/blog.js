@@ -116,12 +116,39 @@
     if (!container) return;
     var envId = (container.dataset.envId || '').trim();
     if (!envId) return;
-    var status = document.querySelector('[data-comment-status]');
+    var section = container.closest('.post-comments');
+    var status = section.querySelector('[data-comment-status]');
+    var retry = section.querySelector('[data-comment-retry]');
+    var client;
+    var timer;
+    var loading = false;
+    var path = container.dataset.path || window.location.pathname;
+    // 与浏览器 pathname 保持一致，中文路径也能读取已有评论。
+    path = new URL(path, window.location.href).pathname;
+
+    function normalizeSystemLabels() {
+      container.querySelectorAll('.tk-extras .tk-extra-text').forEach(function (label) {
+        // 10.15 是现代浏览器也会报告的冻结值，无法据此确认 Catalina。
+        if (label.textContent.trim() === 'macOS Catalina') {
+          label.textContent = '\u00a0macOS';
+          label.title = '浏览器未提供可确认的 macOS 版本。';
+        }
+      });
+    }
 
     function showError() {
-      if (!status) return;
-      status.hidden = false;
-      status.textContent = '评论暂时无法加载，请稍后刷新重试。';
+      window.clearTimeout(timer);
+      loading = false;
+      container.setAttribute('aria-busy', 'false');
+      if (status) {
+        status.hidden = false;
+        status.textContent = '评论未能加载，请重试。';
+      }
+      if (retry) retry.hidden = false;
+      if (client && !window.twikoo) {
+        client.remove();
+        client = null;
+      }
     }
 
     function mountComments() {
@@ -129,11 +156,13 @@
         showError();
         return;
       }
+      window.clearTimeout(timer);
       var options = {
         envId: envId,
         el: '#twikoo-comments',
-        path: container.dataset.path || window.location.pathname,
-        lang: container.dataset.lang || 'zh-CN'
+        path: path,
+        lang: container.dataset.lang || 'zh-CN',
+        onCommentLoaded: normalizeSystemLabels
       };
       // region 只对腾讯云环境有意义，Netlify 等完整地址部署不能传。
       if (!/^https?:\/\//i.test(envId) && container.dataset.region) {
@@ -141,24 +170,47 @@
       }
       try {
         Promise.resolve(window.twikoo.init(options)).then(function () {
+          loading = false;
+          container.setAttribute('aria-busy', 'false');
+          // 挂载后，评论请求的加载与错误提示由 Twikoo 自己处理。
           if (status) status.hidden = true;
+          if (retry) retry.hidden = true;
         }).catch(showError);
       } catch (_) {
         showError();
       }
     }
 
-    if (window.twikoo) {
-      mountComments();
-      return;
+    function loadComments() {
+      if (loading) return;
+      loading = true;
+      container.setAttribute('aria-busy', 'true');
+      if (status) {
+        status.hidden = false;
+        status.textContent = '评论加载中…';
+      }
+      if (retry) retry.hidden = true;
+      if (window.twikoo) {
+        mountComments();
+        return;
+      }
+      var script = document.createElement('script');
+      client = script;
+      script.src = container.dataset.clientUrl;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.addEventListener('load', function () {
+        if (client === script && loading) mountComments();
+      }, { once: true });
+      script.addEventListener('error', function () {
+        if (client === script && loading) showError();
+      }, { once: true });
+      timer = window.setTimeout(showError, 15000);
+      document.head.appendChild(script);
     }
-    var client = document.createElement('script');
-    client.src = container.dataset.clientUrl;
-    client.async = true;
-    client.crossOrigin = 'anonymous';
-    client.addEventListener('load', mountComments, { once: true });
-    client.addEventListener('error', showError, { once: true });
-    document.head.appendChild(client);
+
+    if (retry) retry.addEventListener('click', loadComments);
+    loadComments();
   }
 
   function initialize() {
