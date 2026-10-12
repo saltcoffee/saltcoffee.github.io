@@ -33,18 +33,25 @@ permalink: /articles/weekend-film/
 
 ## 评论
 
-文章底部使用 [Utterances](https://utteranc.es/)，配置位于 `_config.yml` 的 `utterances`：
+文章底部使用 [Twikoo](https://twikoo.js.org/)，配置位于 `_config.yml` 的 `twikoo`：
 
 ```yaml
-utterances:
+twikoo:
   enabled: true
-  repo: "saltcoffee/saltcoffee.github.io"
-  issue_term: title
-  label: Comment
-  theme: github-light
+  env_id: "https://你的站点名.netlify.app/.netlify/functions/twikoo"
+  region: ""
+  version: "2.0.13"
 ```
 
-评论存放在这个仓库的 GitHub Issues 中，按浏览器中的页面标题（文章标题 + 博客名称）关联。仓库需要公开、启用 Issues，并安装 Utterances GitHub App。`Comment` 标签需提前在仓库中创建，名称区分大小写。第一次有人发表评论时，会自动创建对应的 Issue；修改文章标题或博客名称时，应同步对应的 Issue 标题。
+Twikoo 需要单独的后端服务，GitHub Pages 只负责托管博客。可参考[官方部署说明](https://twikoo.js.org/backend.html)部署到 Netlify、Vercel、腾讯云 CloudBase 等平台，再填写实际服务地址。Netlify 的 `env_id` 必须包含 `/.netlify/functions/twikoo` 后缀；Vercel 和私有部署填服务根地址（`https://` 加域名，不带路径）；腾讯云 CloudBase 填环境 ID，并按需设置 `region`。
+
+客户端固定版本，需与后端保持一致。服务地址使用精简客户端，腾讯云环境自动使用包含 CloudBase SDK 的完整客户端。`env_id` 留空或只有空格时不加载客户端，页面显示“评论暂未开放”。
+
+评论按文章的固定 URL 路径关联，标题修改不会改变对应评论。部署在项目子路径时，路径也包含 `baseurl`。Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认开启。
+
+设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。首页、标签、关于页和独立隐私政策不加载评论。
+
+原 Utterances 的评论仍保存在 GitHub Issues 中，不会自动迁移到 Twikoo；本次替换不修改 GitHub 中的内容。
 
 设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。首页、标签、关于页和独立隐私政策不加载评论。
 

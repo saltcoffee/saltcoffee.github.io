@@ -3,7 +3,7 @@
 // Cache names include the registration scope so project sites stay independent.
 const SITE_ROOT = new URL(self.registration.scope);
 const CACHE_PREFIX = 'guagua-blog:' + SITE_ROOT.pathname + ':';
-const CACHE_NAME = CACHE_PREFIX + '2026-10-12-v5';
+const CACHE_NAME = CACHE_PREFIX + '2026-10-12-v6';
 const OFFLINE_URL = new URL('offline.html', SITE_ROOT).href;
 const PRECACHE_PATHS = [
   'offline.html',

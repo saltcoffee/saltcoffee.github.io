@@ -7,12 +7,16 @@ lang: zh-CN
 timezone: Asia/Shanghai
 email: schromelon@gmail.com
 
-utterances:
+twikoo:
   enabled: true
-  repo: "saltcoffee/saltcoffee.github.io"
-  issue_term: title
-  label: Comment
-  theme: github-light
+  # Netlify 部署填完整函数地址，必须带 /.netlify/functions/twikoo 后缀：
+  #   https://你的站点名.netlify.app/.netlify/functions/twikoo
+  # 腾讯云 CloudBase 填环境 ID（不带 https:// 前缀），并在下方 region 填 ap-shanghai。
+  env_id: "https://symphonious-wisp-8f5f34.netlify.app/.netlify/functions/twikoo"
+  # 仅腾讯云环境需要，其他部署方式留空。
+  region: ""
+  # 需与后端 twikoo-netlify 版本保持一致。
+  version: "2.0.13"
 
 markdown: kramdown
 highlighter: rouge
