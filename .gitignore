@@ -1,5 +1,11 @@
-_site/*
-_theme_packages/*
+_site/
+_theme_packages/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+.bundle/
+vendor/bundle/
+node_modules/
 
 Thumbs.db
 .DS_Store
@@ -8,3 +14,7 @@ Thumbs.db
 
 .rbenv-version
 .rvmrc
+
+output/
+
+.playwright-cli/

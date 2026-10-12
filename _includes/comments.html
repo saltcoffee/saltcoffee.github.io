@@ -1,0 +1,15 @@
+{% assign comments_repo = site.utterances.repo | default: '' | strip %}
+{% if site.utterances.enabled and comments_repo != '' and page.comments != false %}
+<section class="post-comments" id="comments" aria-labelledby="post-comments-heading">
+  <h2 id="post-comments-heading">评论</h2>
+  <script src="https://utteranc.es/client.js"
+          repo="{{ comments_repo | escape }}"
+          issue-term="{{ site.utterances.issue_term | default: 'title' | escape }}"
+          label="{{ site.utterances.label | default: 'Comment' | escape }}"
+          theme="{{ site.utterances.theme | default: 'github-light' | escape }}"
+          crossorigin="anonymous"
+          async>
+  </script>
+  <noscript><p>请启用 JavaScript 后查看和发表评论。</p></noscript>
+</section>
+{% endif %}

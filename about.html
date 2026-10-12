@@ -1,55 +1,21 @@
 ---
-layout: page
-title: "关于我"
-description: "我是瓜瓜"
-header-img: "img/about-bg.jpg"
+layout: default
+title: 关于我
+permalink: /about/
+description: 我是瓜瓜，一个写代码、拍胶片的人。
 ---
-
-<!-- Chinese Version -->
-<div class="zh post-container">
-
-    <!--copied from markdown -->
-    <blockquote><p>我拥有的都是侥幸啊，我失去的都是人生</p><br>
-    <p>                       ——张悬</p></blockquote>
-
-    <p>Hey，我是瓜瓜，90后，程序员，写过C++，写过Android，目前在做iOS开发.</p>
-    
-    <p>热爱音乐，电影，晚睡；喜欢张悬，Dota</p>
-    <p>讨厌香菜</p>
+<div class="shell about-page">
+  <div class="about-photo"><img src="{{ '/img/avatar.jpg' | relative_url }}" alt="瓜瓜穿着拖鞋，站在木地板上" width="1080" height="1349"></div>
+  <div class="about-copy">
+    <p class="eyebrow">关于我</p>
+    <h1>Hey，我是瓜瓜。</h1>
+    <div class="prose">
+      <p>90 后，程序员。写过 C++，写过 Android，目前在做 iOS 开发。</p>
+      <p>热爱音乐、电影、晚睡；喜欢张悬、Dota。<br>也拍胶片。讨厌香菜。</p>
+      <blockquote><p>我拥有的都是侥幸啊，<br>我失去的都是人生。</p><cite>—— 张悬</cite></blockquote>
+    </div>
+    <div class="about-links">
+      <a href="mailto:{{ site.email }}">邮箱 ↗</a>
+    </div>
+  </div>
 </div>
-
-{% if site.duoshuo_username %}
-<!-- 多说评论框 start -->
-<div class="comment">
-    <!-- This id is used for indexing my loss comments forcedly -->
-    <div class="ds-thread"
-    {% if site.duoshuo_username == "saltcoffee" %}
-        data-thread-id="6387158636824625921"
-    {% else %}
-    <!-- U can just use this key generated to index comments at page about -->
-        data-thread-key="{{site.duoshuo_username}}/about"
-    {% endif %}
-
-    data-title="{{page.title}}"
-    data-url="{{site.url}}/about/"></div>
-</div>
-<!-- 多说评论框 end -->
-
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    // dynamic User hacking by Hux
-    var _user = '{{site.duoshuo_username}}';
-
-    // duoshuo comment query.
-    var duoshuoQuery = {short_name: _user };
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-</script>
-<!-- 多说公共JS代码 end -->
-{% endif %}
