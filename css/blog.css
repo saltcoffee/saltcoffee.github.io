@@ -230,5 +230,6 @@ h1, h2, h3, p { margin: 0; }
 
 .post-comments { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
 .post-comments h2 { margin-bottom: 18px; font-size: 18px; font-weight: 600; color: var(--ink); }
-.post-comments .utterances { max-width: 100%; margin-inline: 0; }
+.post-comments .twikoo { max-width: 100%; margin-inline: 0; font-size: 14px; }
+.post-comments .comment-status { color: var(--muted); font-size: 14px; }
 .post-comments noscript p { color: var(--muted); font-size: 14px; }

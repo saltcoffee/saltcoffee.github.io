@@ -111,8 +111,59 @@
     toc.hidden = false;
   }
 
+  function initializeComments() {
+    var container = document.querySelector('[data-twikoo]');
+    if (!container) return;
+    var envId = (container.dataset.envId || '').trim();
+    if (!envId) return;
+    var status = document.querySelector('[data-comment-status]');
+
+    function showError() {
+      if (!status) return;
+      status.hidden = false;
+      status.textContent = '评论暂时无法加载，请稍后刷新重试。';
+    }
+
+    function mountComments() {
+      if (!window.twikoo || typeof window.twikoo.init !== 'function') {
+        showError();
+        return;
+      }
+      var options = {
+        envId: envId,
+        el: '#twikoo-comments',
+        path: container.dataset.path || window.location.pathname,
+        lang: container.dataset.lang || 'zh-CN'
+      };
+      // region 只对腾讯云环境有意义，Netlify 等完整地址部署不能传。
+      if (!/^https?:\/\//i.test(envId) && container.dataset.region) {
+        options.region = container.dataset.region;
+      }
+      try {
+        Promise.resolve(window.twikoo.init(options)).then(function () {
+          if (status) status.hidden = true;
+        }).catch(showError);
+      } catch (_) {
+        showError();
+      }
+    }
+
+    if (window.twikoo) {
+      mountComments();
+      return;
+    }
+    var client = document.createElement('script');
+    client.src = container.dataset.clientUrl;
+    client.async = true;
+    client.crossOrigin = 'anonymous';
+    client.addEventListener('load', mountComments, { once: true });
+    client.addEventListener('error', showError, { once: true });
+    document.head.appendChild(client);
+  }
+
   function initialize() {
     initializeSearch();
+    initializeComments();
     document.querySelectorAll('[data-post-body]').forEach(function (body) {
       initializeImages(body);
       initializeTableOfContents(body);
