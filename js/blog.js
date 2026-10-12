@@ -112,7 +112,7 @@
   }
 
   function initializeComments() {
-    var container = document.querySelector('[data-twikoo]');
+    var container = document.querySelector('#twikoo-comments[data-twikoo]');
     if (!container) return;
     var envId = (container.dataset.envId || '').trim();
     if (!envId) return;
@@ -134,6 +134,31 @@
           label.title = '浏览器未提供可确认的 macOS 版本。';
         }
       });
+    }
+
+    // Twikoo 会在提交、刷新和加载更多时更新 DOM；同时处理局部重绘。
+    if (typeof window.MutationObserver === 'function') {
+      var scheduled = false;
+      var labelSelector = '.tk-extras .tk-extra-text';
+      var observer = new window.MutationObserver(function (records) {
+        var labelsChanged = records.some(function (record) {
+          if (record.type === 'characterData') {
+            var parent = record.target.parentElement;
+            return parent && parent.matches(labelSelector);
+          }
+          if (record.target.nodeType === 1 && record.target.matches(labelSelector)) return true;
+          return Array.from(record.addedNodes).some(function (node) {
+            return node.nodeType === 1 && (node.matches(labelSelector) || node.querySelector(labelSelector));
+          });
+        });
+        if (!labelsChanged || scheduled) return;
+        scheduled = true;
+        window.requestAnimationFrame(function () {
+          scheduled = false;
+          normalizeSystemLabels();
+        });
+      });
+      observer.observe(container, { childList: true, subtree: true, characterData: true });
     }
 
     function showError() {
