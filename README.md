@@ -47,13 +47,15 @@ Twikoo 需要单独的后端服务，GitHub Pages 只负责托管博客。可参
 
 客户端固定版本，需与后端保持一致。服务地址使用精简客户端，腾讯云环境自动使用包含 CloudBase SDK 的完整客户端。`env_id` 留空或只有空格时不加载客户端，页面显示“评论暂未开放”。
 
-评论按文章的固定 URL 路径关联，标题修改不会改变对应评论。部署在项目子路径时，路径也包含 `baseurl`。Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认开启。
+评论按文章的固定 URL 路径关联，标题修改不会改变对应评论。路径统一使用浏览器 `pathname` 的编码形式（中文转为 `%…`），部署在项目子路径时也包含 `baseurl`，与已有评论的地址保持一致。
+
+Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认开启。现代 Safari 的 macOS UA 固定报告 `10_15_7`，无法据此获取真实系统版本；前端将有歧义的“macOS Catalina”标签显示为“macOS”，保留数据库的原始 UA。其他已识别的系统版本与浏览器标签继续显示。Twikoo 2.0.13 会在浏览器提供 User-Agent Client Hints 时补充系统版本，因此部分 Chromium 浏览器能显示 Sequoia 等名称。
+
+客户端脚本加载超过 15 秒或失败时，可在评论区重新加载；评论数据请求的错误由 Twikoo 自己提示。
 
 设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。首页、标签、关于页和独立隐私政策不加载评论。
 
 原 Utterances 的评论仍保存在 GitHub Issues 中，不会自动迁移到 Twikoo；本次替换不修改 GitHub 中的内容。
-
-设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。首页、标签、关于页和独立隐私政策不加载评论。
 
 ## 本地预览
 

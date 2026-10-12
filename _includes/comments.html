@@ -7,7 +7,8 @@
   {% assign twikoo_script = 'twikoo.all.min.js' %}
   {% if twikoo_env_id contains '://' %}{% assign twikoo_script = 'twikoo.min.js' %}{% endif %}
   {% assign twikoo_client_url = 'https://cdn.jsdelivr.net/npm/twikoo@' | append: twikoo_version | append: '/dist/' | append: twikoo_script %}
-  <p class="comment-status" data-comment-status role="status">评论加载中…</p>
+  <p class="comment-status" data-comment-status role="status" hidden>评论加载中…</p>
+  <button class="comment-retry" type="button" data-comment-retry hidden>重新加载评论</button>
   <div id="twikoo-comments"
        data-twikoo
        data-env-id="{{ twikoo_env_id | escape }}"
