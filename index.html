@@ -1,42 +1,50 @@
 ---
-layout: page
-description: "Talk is cheap, show me the Bug"
+layout: default
 ---
-
-{% for post in paginator.posts %}
-<div class="post-preview">
-    <a href="{{ post.url | prepend: site.baseurl }}">
-        <h2 class="post-title">
-            {{ post.title }}
-        </h2>
-        {% if post.subtitle %}
-        <h3 class="post-subtitle">
-            {{ post.subtitle }}
-        </h3>
-        {% endif %}
-        <div class="post-content-preview">
-            {{ post.content | strip_html | truncate:200 }}
-        </div>
+{% include articles.html %}
+<div class="shell home">
+  <section class="home-intro" aria-labelledby="home-title">
+    <div class="intro-copy">
+      <p class="eyebrow">瓜瓜的博客</p>
+      <h1 id="home-title">写一行代码，<br>十个 Bug。</h1>
+      <p class="intro-description">一个 iOS 开发者的日常。代码之外，也拍胶片。</p>
+    </div>
+    <a class="intro-about" href="{{ '/about/' | relative_url }}">
+      <img src="{{ '/img/avatar.jpg' | relative_url }}" alt="瓜瓜的日常照片：穿着拖鞋站在木地板上" width="1080" height="1349">
+      <span>你好，我是瓜瓜。<span class="intro-about-link">关于我 <span aria-hidden="true">↗</span></span></span>
     </a>
-    <p class="post-meta">
-        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
-    </p>
-</div>
-<hr>
-{% endfor %}
+  </section>
 
-<!-- Pager -->
-{% if paginator.total_pages > 1 %}
-<ul class="pager">
-    {% if paginator.previous_page %}
-    <li class="previous">
-        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
-    </li>
-    {% endif %}
-    {% if paginator.next_page %}
-    <li class="next">
-        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
-    </li>
-    {% endif %}
-</ul>
-{% endif %}
+  <section class="writing" aria-labelledby="writing-title" data-article-index>
+    <div class="section-bar">
+      <h2 id="writing-title">文章 <span class="article-count">{{ articles.size }}</span></h2>
+      <div class="search-control" hidden>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <label class="sr-only" for="article-search">搜索文章</label>
+        <input id="article-search" type="search" placeholder="搜索文章" autocomplete="off">
+      </div>
+    </div>
+    <div class="article-list">
+      {% for post in articles %}
+      <article class="article-entry{% if post.cover %} article-entry-photo{% endif %}" data-article data-search="{{ post.title | append: ' ' | append: post.subtitle | append: ' ' | append: post.summary | append: ' ' | append: post.content | strip_html | normalize_whitespace | escape }} {{ post.tags | join: ' ' | escape }}">
+        {% if post.cover %}
+        <a class="article-image" href="{{ post.url | relative_url }}" tabindex="-1" aria-hidden="true">
+          <img src="{{ post.cover | relative_url }}" {% if post.cover_small %}srcset="{{ post.cover_small | relative_url }} 960w, {{ post.cover | relative_url }} 1600w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1160px) 55vw, 610px"{% endif %} alt="{{ post.cover_alt | default: post.title | escape }}" width="1600" height="977" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+        </a>
+        {% endif %}
+        <div class="article-entry-copy">
+          {% include article-meta.html article=post %}
+          <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
+          {% if post.subtitle %}<p class="article-subtitle">{{ post.subtitle | escape }}</p>{% endif %}
+          <p class="article-summary">{{ post.summary | default: post.excerpt | strip_html | normalize_whitespace | truncate: 135 }}</p>
+          <a class="read-link" href="{{ post.url | relative_url }}" aria-label="阅读：{{ post.title | escape }}">阅读全文 <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+      {% else %}
+      <p class="empty-state">还没有文章，过些时候再来看看。</p>
+      {% endfor %}
+    </div>
+    <p class="empty-state" data-search-empty hidden>没有找到相关文章，试试其他关键词。</p>
+    <p class="search-status sr-only" aria-live="polite" data-search-status></p>
+  </section>
+</div>

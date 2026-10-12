@@ -1,90 +1,57 @@
-# Site settings
 title: 瓜瓜
 SEOTitle: 瓜瓜的博客
-header-img: img/home-bg.jpg
+description: "写一行代码，十个 Bug。"
+url: "https://saltcoffee.github.io"
+baseurl: ""
+lang: zh-CN
+timezone: Asia/Shanghai
 email: schromelon@gmail.com
-description: "写一行代码，十个Bug"
-keyword: ""
-url: "https://saltcoffee.github.io"              # your host, for absolute URL
-baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
+utterances:
+  enabled: true
+  repo: "saltcoffee/saltcoffee.github.io"
+  issue_term: title
+  label: Comment
+  theme: github-light
 
-
-# SNS settings
-RSS: false
-weibo_username:     soltcoffee
-zhihu_username:     sosopro
-github_username:    saltcoffee
-
-
-
-# Build settings
-# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+markdown: kramdown
 highlighter: rouge
 permalink: pretty
-paginate: 10
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
-anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
-
-
-
-# Gems
-# from PR#40, to support local preview for Jekyll 3.0
-gems: [jekyll-paginate]
-
-
-
-# Markdown settings
-# replace redcarpet to kramdown,
-# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
-# document: http://jekyllrb.com/docs/configuration/#kramdown
-markdown: kramdown
 kramdown:
-  input: GFM                            # use Github Flavored Markdown !important
+  input: GFM
 
+# 新文章可用任意文件名；标题和日期写在文章的 front matter 中。
+# _posts 仍然兼容，已有链接不变。
+collections:
+  articles:
+    output: true
+    permalink: /articles/:path/
 
+defaults:
+  - scope:
+      path: ""
+      type: articles
+    values:
+      layout: post
+      tags: []
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      tags: []
 
-# Disqus settings
-# disqus_username: nishuilemei
-
-# Duoshuo settings
-duoshuo_username: saltcoffee
-# Share component is depend on Comment so we can NOT use share only.
-duoshuo_share: false                     # set to false if you want to use Comment without Sharing
-
-
-# Analytics settings
-# Baidu Analytics 
-# ba_track_id: [your track id]
-
-# Google Analytics
-# ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-# ga_domain: huangxuan.me
-
-
-
-# Sidebar settings
-sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "……"
-sidebar-avatar: /img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
-
-
-
-# Featured Tags
-featured-tags: true                     # whether or not using Feature-Tags
-featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
-
-
-
-# Progressive Web Apps
-chrome-tab-theme-color: "#000000"
 service-worker: true
-
-
-
-# Friends
-friends: [
-    
-]
-
-theme: jekyll-theme-minimal
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules
+  - less
+  - Gruntfile.js
+  - package.json
+  - README.md
+  - README.zh.md
+  - output
+  - scripts
+  - tests

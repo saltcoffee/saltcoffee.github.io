@@ -1,25 +1,12 @@
 ---
 layout: default
-description: "当前网络不可用 :("
-header-img: "img/404-bg.jpg"
+title: 暂时离线
 permalink: /offline.html
 ---
-
-
-<!-- Page Header -->
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-				<div class="site-heading" id="tag-heading">
-					<h1>Offline</h1>
-					<span class="subheading">{{ page.description }}</span>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
-
-<script>
-	document.body.classList.add('page-fullscreen');
-</script>
+<div class="reading-shell error-page">
+  <p class="eyebrow">暂时离线</p>
+  <h1>网络断开了。</h1>
+  <p>已读过的页面可以继续浏览，其他文章需要联网后打开。</p>
+  <button class="text-button" type="button" data-reload>重新加载 ↗</button>
+  <a class="back-link" href="{{ '/' | relative_url }}">← 回到首页</a>
+</div>

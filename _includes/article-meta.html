@@ -1,0 +1,4 @@
+<div class="article-meta">
+  {% if include.article.date and include.article.date != site.time %}<time datetime="{{ include.article.date | date_to_xmlschema }}">{{ include.article.date | date: '%Y.%m.%d' }}</time>{% endif %}
+  {% for tag in include.article.tags %}<a href="{{ '/tags/' | relative_url }}#{{ tag | url_encode | replace: '+', '%20' }}">{{ tag | escape }}</a>{% endfor %}
+</div>

@@ -1,0 +1,6 @@
+{% assign visible_articles = site.posts | concat: site.articles | where_exp: 'item', 'item.listed != false' | where_exp: 'item', 'item.published != false' %}
+{% assign dated_articles = visible_articles | where_exp: 'item', 'item.date != nil' | where_exp: 'item', 'item.date != site.time' | sort: 'date' | reverse %}
+{% assign missing_dates = visible_articles | where_exp: 'item', 'item.date == nil' %}
+{% assign fallback_dates = visible_articles | where_exp: 'item', 'item.date == site.time' %}
+{% assign undated_articles = missing_dates | concat: fallback_dates | sort: 'title' %}
+{% assign articles = dated_articles | concat: undated_articles %}
