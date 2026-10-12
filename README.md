@@ -51,7 +51,9 @@ Twikoo 需要单独的后端服务，GitHub Pages 只负责托管博客。可参
 
 Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认开启。现代 Safari 的 macOS UA 固定报告 `10_15_7`，无法据此获取真实系统版本；前端将有歧义的“macOS Catalina”标签显示为“macOS”，保留数据库的原始 UA。其他已识别的系统版本与浏览器标签继续显示。Twikoo 2.0.13 会在浏览器提供 User-Agent Client Hints 时补充系统版本，因此部分 Chromium 浏览器能显示 Sequoia 等名称。
 
-客户端脚本加载超过 15 秒或失败时，可在评论区重新加载；评论数据请求的错误由 Twikoo 自己提示。
+客户端脚本加载超过 15 秒或失败时，可在评论区重新加载；评论数据请求的错误由 Twikoo 自己提示。 系统标签在加载回调和评论区局部更新后都会重新检查，覆盖新评论、回复和加载更多。
+
+静态资源链接带 `_config.yml` 的 `asset_version`，避免旧缓存继续运行旧脚本；修改 CSS/JS 时同步更新该值与 `sw.js` 的 `ASSET_VERSION`，离线预缓存使用相同版本。
 
 设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。首页、标签、关于页和独立隐私政策不加载评论。
 

@@ -19,7 +19,7 @@
   <meta property="og:description" content="{{ meta_description | strip_html | normalize_whitespace | escape }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   {% if page.cover %}<meta property="og:image" content="{{ page.cover | absolute_url }}">{% endif %}
-  <link rel="stylesheet" href="{{ '/css/blog.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/css/syntax.css' | relative_url }}">
-  <script src="{{ '/js/blog.js' | relative_url }}" defer></script>
+  <link rel="stylesheet" href="{{ '/css/blog.css' | relative_url }}?v={{ site.asset_version | escape }}">
+  <link rel="stylesheet" href="{{ '/css/syntax.css' | relative_url }}?v={{ site.asset_version | escape }}">
+  <script src="{{ '/js/blog.js' | relative_url }}?v={{ site.asset_version | escape }}" defer></script>
 </head>
