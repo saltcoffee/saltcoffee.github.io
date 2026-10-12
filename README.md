@@ -71,6 +71,6 @@ bundle exec jekyll build
 
 如果发布在项目子路径（例如 `/blog`），在 `_config.yml` 设置 `baseurl: /blog`，并把 `url` 保持为域名。本站导航、图片、订阅、离线缓存使用相对路径过滤器适配子路径。
 
-样式在 `css/blog.css`，交互在 `js/blog.js`，页面模板在 `_layouts` 和 `_includes`。旧主题资源保留在仓库中，新页面不再加载它们。
+样式在 `css/blog.css`，交互在 `js/blog.js`，页面模板在 `_layouts` 和 `_includes`。页面不依赖 Hux、Bootstrap、jQuery 或字体文件，旧主题资源与 Grunt 构建脚本已清理。
 
 36 张胶片图片已保留原画幅、转换为网页尺寸，并配置懒加载；首图提供 960 和 1600 像素的首页封面。图片原片请另外留存，网页版本不替代原片。
