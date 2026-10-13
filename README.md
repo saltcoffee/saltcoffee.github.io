@@ -73,6 +73,8 @@ Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认�
 
 页面、CSS、JS 和站点清单在联网时优先向服务器验证最新内容，仅在网络请求失败时使用对应的离线缓存。照片仍采用前述独立缓存，样式更新不会导致照片重复下载。已安装 Service Worker 的浏览器在页面头部检查更新，不等待文章图片加载结束；首次访问仍优先加载页面，也不会强制刷新正在阅读或填写评论的页面。
 
+全站图标由 `_includes/icons.html` 统一声明，独立隐私政策和旧文章跳转页也使用相同图标。标签图标使用苹方“瓜”字的 SVG 路径与多尺寸 ICO，分别位于 `img/favicon-pingfang.svg` 和根目录 `favicon.ico`；根目录图标同时兼容浏览器的默认请求。Apple Touch 与 PWA 图标使用相同字形。图标在联网时验证最新内容，离线时使用对应缓存，不进入照片的 7 天缓存。原 `img/favicon.svg` / `img/favicon.ico` 保留为旧页面的兼容资源。
+
 静态资源链接带 `_config.yml` 的 `asset_version`，修改 CSS/JS 或站点图标时同步更新该值与 `sw.js` 的 `ASSET_VERSION`，离线预缓存使用相同版本。曾使用旧 Hux 主题的浏览器可能在升级 Service Worker 的第一次访问中显示旧页面；新 worker 激活后，下一次导航或刷新才会使用新策略。
 
 设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。文章和关于页加载评论；首页、标签和独立隐私政策不加载评论。关于页评论单独关联 `/about/`，不与文章评论混合。

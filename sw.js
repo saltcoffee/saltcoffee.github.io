@@ -4,7 +4,7 @@
 const SITE_ROOT = new URL(self.registration.scope);
 const CACHE_PREFIX = 'guagua-blog:' + SITE_ROOT.pathname + ':';
 // Keep this value in sync with asset_version in _config.yml.
-const ASSET_VERSION = '2026-10-13-v18';
+const ASSET_VERSION = '2026-10-13-v20';
 const CACHE_NAME = CACHE_PREFIX + ASSET_VERSION;
 // Photo storage survives CSS/JS releases; metadata keeps its original response intact.
 const IMAGE_CACHE_NAME = CACHE_PREFIX + 'images-v1';
@@ -20,10 +20,16 @@ const PRECACHE_PATHS = [
   'css/gallery.css?v=' + ASSET_VERSION,
   'js/blog.js?v=' + ASSET_VERSION,
   'js/gallery.js?v=' + ASSET_VERSION,
-  'img/favicon.ico?v=' + ASSET_VERSION,
-  'img/favicon.svg?v=' + ASSET_VERSION
+  'favicon.ico?v=' + ASSET_VERSION,
+  'img/favicon-pingfang.svg?v=' + ASSET_VERSION,
+  'pwa/icons/128.png?v=' + ASSET_VERSION,
+  'pwa/icons/512.png?v=' + ASSET_VERSION
 ];
 const LEGACY_CACHES = ['precache-v1', 'runtime'];
+const SITE_ICON_PATHS = new Set([
+  'favicon.ico', 'img/favicon-pingfang.svg', 'img/favicon.ico', 'img/favicon.svg',
+  'pwa/icons/128.png', 'pwa/icons/512.png'
+].map(path => new URL(path, SITE_ROOT).pathname));
 
 function isSiteURL(value) {
   const url = new URL(value);
@@ -258,6 +264,13 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET' || request.headers.has('range')) return;
   const url = new URL(request.url);
+  // Site identity updates with the page, independently of long-lived photo storage.
+  if (isSiteURL(request.url) && SITE_ICON_PATHS.has(url.pathname)) {
+    const response = networkFirst(event, false);
+    event.respondWith(response);
+    event.waitUntil(response.then(() => undefined).catch(() => undefined));
+    return;
+  }
   if (request.destination === 'image') {
     if (!/^https?:$/.test(url.protocol)) return;
     const response = imageCacheFirst(event);
