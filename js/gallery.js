@@ -334,30 +334,8 @@
       image.addEventListener('error', function () {
         item.valid = false;
         if (generated) { link.removeAttribute('href'); link.removeAttribute('aria-label'); link.classList.remove('photo-link'); }
-        updateTools();
       }, { once: true });
       items.push(item);
     });
-    if (!items.length) return;
-    var tools = element('div', 'photo-gallery-tools');
-    var count = element('span', 'photo-gallery-tools__count');
-    var browse = element(supported ? 'button' : 'a', 'photo-gallery-tools__button', '浏览照片');
-    if (supported) browse.type = 'button';
-    else browse.href = items[0].source;
-    browse.addEventListener('click', function () {
-      var first = items.find(usable);
-      if (first) openAlbum(items, first, browse, heading);
-    });
-    tools.append(count, browse);
-    var firstBlock = items[0].link;
-    while (firstBlock.parentNode !== body) firstBlock = firstBlock.parentNode;
-    body.insertBefore(tools, firstBlock);
-    function updateTools() {
-      var available = items.filter(usable);
-      count.textContent = available.length + ' 张照片';
-      tools.hidden = !available.length;
-      if (!supported && available.length) browse.href = available[0].source;
-    }
-    updateTools();
   });
 }());
