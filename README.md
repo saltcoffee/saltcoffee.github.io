@@ -31,6 +31,10 @@ permalink: /articles/weekend-film/
 
 原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。摄影文章位于 `_articles`，地址已改为 `/articles/2025年我用胶片拍了些什么/`；原来的日期地址通过 `redirects/film-2025.html` 自动跳转，保留查询参数和锚点。两份隐私政策保留原地址。
 
+## 搜索
+
+搜索框位于全站导航最右侧。首页实时筛选文章，支持中文和多个关键词；在其他页面提交搜索后，会回到首页显示结果。按 Esc 或清空搜索框可恢复文章列表，提交后的搜索地址可以分享。
+
 ## 图片浏览
 
 所有文章正文的图片会自动加入图片查看器。以后使用普通 Markdown 的 `![说明](图片地址)` 或 HTML `<img>` 即可，不需要额外 front matter，也不需要填写图片宽高。点击正文照片即可打开大图。
@@ -65,7 +69,7 @@ Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认�
 
 静态资源链接带 `_config.yml` 的 `asset_version`，避免旧缓存继续运行旧脚本；修改 CSS/JS 时同步更新该值与 `sw.js` 的 `ASSET_VERSION`，离线预缓存使用相同版本。
 
-设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。首页、标签、关于页和独立隐私政策不加载评论。
+设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。文章和关于页加载评论；首页、标签和独立隐私政策不加载评论。关于页评论单独关联 `/about/`，不与文章评论混合。
 
 原 Utterances 的评论仍保存在 GitHub Issues 中，不会自动迁移到 Twikoo；本次替换不修改 GitHub 中的内容。
 
