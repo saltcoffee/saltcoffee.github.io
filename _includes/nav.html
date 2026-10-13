@@ -2,6 +2,7 @@
   <a class="wordmark" href="{{ '/' | relative_url }}" aria-label="瓜瓜的博客，首页">
     <span class="wordmark-name">{{ site.title }}</span>
   </a>
+  <div class="header-actions">
   <nav class="site-nav" aria-label="主导航">
     <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}aria-current="page"{% endif %}>文章</a>
     <a href="{{ '/tags/' | relative_url }}" {% if page.url == '/tags/' %}aria-current="page"{% endif %}>标签</a>
@@ -10,4 +11,12 @@
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="5" cy="19" r="2" fill="currentColor"/><path d="M3 11a10 10 0 0 1 10 10M3 3a18 18 0 0 1 18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
     </a>
   </nav>
+  <form class="header-search" role="search" data-article-search-form action="{{ '/' | relative_url }}#writing" method="get">
+    <label class="sr-only" for="article-search">搜索文章</label>
+    <input id="article-search" name="q" type="search" data-article-search placeholder="搜索文章" autocomplete="off" {% if page.url == '/' %}aria-controls="writing"{% endif %}>
+    <button type="submit" aria-label="搜索文章">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </form>
+  </div>
 </header>

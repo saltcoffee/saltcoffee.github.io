@@ -2,6 +2,7 @@
 layout: default
 title: 关于我
 permalink: /about/
+comments: true
 description: 我是瓜瓜，一个写代码、拍照的手艺人。
 ---
 <div class="shell about-page">
@@ -19,3 +20,8 @@ description: 我是瓜瓜，一个写代码、拍照的手艺人。
     </div>
   </div>
 </div>
+{% if site.twikoo.enabled and page.comments != false %}
+<div class="reading-shell about-comments">
+  {% include comments.html %}
+</div>
+{% endif %}

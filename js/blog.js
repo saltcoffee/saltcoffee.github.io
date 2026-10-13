@@ -6,50 +6,73 @@
   }
 
   function initializeSearch() {
-    document.querySelectorAll('[data-article-index]').forEach(function (index) {
-      var input = index.querySelector('#article-search');
-      var control = index.querySelector('.search-control');
-      var empty = index.querySelector('[data-search-empty]');
-      var status = index.querySelector('[data-search-status]');
-      var entries = Array.from(index.querySelectorAll('[data-article]')).map(function (element) {
-        return {
-          element: element,
-          text: normalizeSearch((element.getAttribute('data-search') || '') + ' ' + element.textContent)
-        };
-      });
-      if (!input || !entries.length) return;
+    var form = document.querySelector('[data-article-search-form]');
+    var input = form && form.querySelector('[data-article-search]');
+    if (!form || !input) return;
+    input.value = new URL(window.location.href).searchParams.get('q') || '';
+    var index = document.querySelector('[data-article-index]');
+    if (!index) return;
 
-      var composing = false;
-      function updateResults() {
-        if (composing) return;
-        var query = normalizeSearch(input.value);
-        var words = query ? query.split(' ') : [];
-        var count = 0;
-        entries.forEach(function (entry) {
-          var matches = words.every(function (word) { return entry.text.includes(word); });
-          entry.element.hidden = !matches;
-          if (matches) count += 1;
-        });
-        if (empty) empty.hidden = !words.length || count > 0;
-        if (status) status.textContent = words.length ? '找到 ' + count + ' 篇文章' : '共 ' + count + ' 篇文章';
-      }
+    var empty = index.querySelector('[data-search-empty]');
+    var status = index.querySelector('[data-search-status]');
+    var entries = Array.from(index.querySelectorAll('[data-article]')).map(function (element) {
+      return {
+        element: element,
+        text: normalizeSearch((element.getAttribute('data-search') || '') + ' ' + element.textContent)
+      };
+    });
+    var composing = false;
 
-      if (control) control.hidden = false;
-      input.addEventListener('compositionstart', function () { composing = true; });
-      input.addEventListener('compositionend', function () {
-        composing = false;
-        updateResults();
+    function updateResults() {
+      if (composing) return;
+      var query = normalizeSearch(input.value);
+      var words = query ? query.split(' ') : [];
+      var count = 0;
+      entries.forEach(function (entry) {
+        var matches = words.every(function (word) { return entry.text.includes(word); });
+        entry.element.hidden = !matches;
+        if (matches) count += 1;
       });
-      input.addEventListener('input', updateResults);
-      input.addEventListener('search', updateResults);
-      input.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && !composing) {
-          input.value = '';
-          updateResults();
-        }
-      });
+      if (empty) empty.hidden = !words.length || count > 0;
+      if (status) status.textContent = words.length ? '找到 ' + count + ' 篇文章' : '共 ' + count + ' 篇文章';
+    }
+
+    function syncQueryURL() {
+      var url = new URL(window.location.href);
+      var query = input.value.trim();
+      if (query) url.searchParams.set('q', query);
+      else url.searchParams.delete('q');
+      if (url.href !== window.location.href) window.history.replaceState(window.history.state, '', url.href);
+    }
+
+    input.addEventListener('compositionstart', function () { composing = true; });
+    input.addEventListener('compositionend', function () {
+      composing = false;
       updateResults();
     });
+    input.addEventListener('input', updateResults);
+    input.addEventListener('search', function () {
+      if (composing) return;
+      updateResults();
+      syncQueryURL();
+    });
+    input.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !composing && !event.isComposing) {
+        event.preventDefault();
+        input.value = '';
+        updateResults();
+        syncQueryURL();
+      }
+    });
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (composing) return;
+      updateResults();
+      syncQueryURL();
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      index.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+    updateResults();
   }
 
   function initializeImages(body) {

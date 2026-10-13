@@ -4,24 +4,13 @@ layout: default
 {% include articles.html %}
 <div class="shell home">
   <section class="home-intro" aria-labelledby="home-title">
-    <div class="intro-copy">
-      <p class="eyebrow">瓜瓜的博客</p>
-      <p class="intro-description">一个 iOS 开发者的日常。代码之外，也摄影</p>
-    </div>
-    <a class="intro-about" href="{{ '/about/' | relative_url }}">
-      <img src="{{ '/img/avatar.jpg' | relative_url }}" alt="瓜瓜的日常照片：穿着拖鞋站在木地板上" width="1080" height="1349">
-      <span>你好，我是瓜瓜。<span class="intro-about-link">关于我 <span aria-hidden="true">↗</span></span></span>
-    </a>
+    <h1 id="home-title">一个 iOS 开发者的日常。</h1>
+    <p class="intro-description">代码之外，也摄影。</p>
   </section>
 
-  <section class="writing" aria-labelledby="writing-title" data-article-index>
+  <section class="writing" id="writing" aria-labelledby="writing-title" data-article-index>
     <div class="section-bar">
       <h2 id="writing-title">文章 <span class="article-count">{{ articles.size }}</span></h2>
-      <div class="search-control" hidden>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <label class="sr-only" for="article-search">搜索文章</label>
-        <input id="article-search" type="search" placeholder="搜索文章" autocomplete="off">
-      </div>
     </div>
     <div class="article-list">
       {% for post in articles %}
@@ -36,7 +25,7 @@ layout: default
           <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
           {% if post.subtitle %}<p class="article-subtitle">{{ post.subtitle | escape }}</p>{% endif %}
           <p class="article-summary">{{ post.summary | default: post.excerpt | strip_html | normalize_whitespace | truncate: 135 }}</p>
-          <a class="read-link" href="{{ post.url | relative_url }}" aria-label="阅读：{{ post.title | escape }}">阅读全文 <span aria-hidden="true">↗</span></a>
+          <a class="read-link" href="{{ post.url | relative_url }}" aria-label="阅读：{{ post.title | escape }}">阅读全文 <span aria-hidden="true">→</span></a>
         </div>
       </article>
       {% else %}
