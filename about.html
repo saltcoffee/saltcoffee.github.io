@@ -6,12 +6,11 @@ comments: true
 description: 我是瓜瓜，一个写代码、拍照的手艺人。
 ---
 <div class="shell about-page">
-  <div class="about-photo"><img src="{{ '/img/avatar.jpg' | relative_url }}" alt="瓜瓜穿着拖鞋，站在木地板上" width="1080" height="1349"></div>
   <div class="about-copy">
     <p class="eyebrow">关于我</p>
     <h1>Hey，我是瓜瓜。</h1>
     <div class="prose">
-      <p>90 后，程序员。写过 C++，写过 Android，目前在做 iOS 开发</p>
+      <p>一个无可救药的理想主义者，写过 C++，做过 Android，做过 iOS 开发，目前在拥抱 AI</p>
       <p>热爱音乐、电影、晚睡；喜欢张悬、Dota<br>也摄影，讨厌香菜</p>
       <blockquote><p>我拥有的都是侥幸啊，<br>我失去的都是人生</p><cite>—— 张悬</cite></blockquote>
     </div>
@@ -19,6 +18,13 @@ description: 我是瓜瓜，一个写代码、拍照的手艺人。
       <a href="mailto:{{ site.email }}">邮箱 ↗</a>
     </div>
   </div>
+  <aside class="about-wechat" aria-labelledby="about-wechat-title">
+    <h2 id="about-wechat-title">微信公众号</h2>
+    <a class="wechat-qr" href="{{ '/img/wechat-public-account.jpg' | relative_url }}" target="_blank" rel="noopener" aria-label="查看微信公众号二维码原图（新标签页）">
+      <img src="{{ '/img/wechat-public-account.jpg' | relative_url }}" alt="我的微信公众号二维码" width="430" height="430" loading="lazy" decoding="async">
+    </a>
+    <p class="wechat-note">用微信扫一扫，或保存图片后在微信中识别。</p>
+  </aside>
 </div>
 {% if site.twikoo.enabled and page.comments != false %}
 <div class="reading-shell about-comments">
