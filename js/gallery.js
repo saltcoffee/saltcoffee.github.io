@@ -6,6 +6,7 @@
   var album = [], index = 0, token = 0, dimensions = null, savedStyle, scrollPosition, opener;
   var ownsFullscreen = false, fullscreenPending = false, exitPending = false, relayering = false, sessionOpen = false;
   var lastWheel = 0, suppressClickUntil = 0, touchStart, thumbnailObserver;
+  var imageCache = new Map(), imageCacheLimit = 12, thumbnailAlbum = [];
 
   function element(tag, name, text) {
     var node = document.createElement(tag);
@@ -79,7 +80,6 @@
     ++token;
     viewer.hidden = true;
     setZoom(false);
-    photo.removeAttribute('src');
     if (thumbnailObserver) thumbnailObserver.disconnect();
     leaveFullscreen();
     if (savedStyle === null) document.body.removeAttribute('style');
@@ -127,15 +127,59 @@
     });
   }
 
+  function cachedImage(source) {
+    var cached = imageCache.get(source);
+    if (cached) {
+      // Keep the most recently viewed images, including loads still in flight.
+      imageCache.delete(source);
+      imageCache.set(source, cached);
+      return cached;
+    }
+    var image = new Image(), resolveReady;
+    image.className = 'photo-viewer__image';
+    image.draggable = false;
+    image.decoding = 'async';
+    image.hidden = true;
+    cached = { image: image, state: 'loading' };
+    cached.ready = new Promise(function (resolve) { resolveReady = resolve; });
+    imageCache.set(source, cached);
+    function finish(success) {
+      if (cached.state !== 'loading') return;
+      success = success && image.naturalWidth > 0;
+      cached.state = success ? 'loaded' : 'failed';
+      image.onload = null;
+      image.onerror = null;
+      if (!success && imageCache.get(source) === cached) imageCache.delete(source);
+      resolveReady(success);
+    }
+    image.onload = function () { finish(true); };
+    image.onerror = function () { finish(false); };
+    image.src = source;
+    if (image.complete) finish(image.naturalWidth > 0);
+    // Bound decoded image memory without discarding the displayed photo.
+    imageCache.forEach(function (entry, url) {
+      if (imageCache.size > imageCacheLimit && entry.image !== photo && url !== source) imageCache.delete(url);
+    });
+    return cached;
+  }
+
   function showImage(position) {
     if (position < 0 || position >= album.length) return;
     index = position;
-    var item = album[index], request = ++token, settled = false;
+    var item = album[index], request = ++token;
     dimensions = null;
     setZoom(false);
     updateZoom();
     photo.hidden = true;
-    photo.removeAttribute('src');
+    var cached = cachedImage(item.source);
+    if (photo !== cached.image) {
+      photo.replaceWith(cached.image);
+      photo = cached.image;
+    }
+    photo.alt = item.alt;
+    photo.style.width = '';
+    photo.style.height = '';
+    photo.hidden = true;
     message.replaceChildren(document.createTextNode('照片加载中…'));
     message.hidden = false;
     stage.setAttribute('aria-busy', 'true');
@@ -150,15 +194,11 @@
     window.requestAnimationFrame(function () {
       if (viewer.open && request === token) thumbnails.children[index].scrollIntoView({ block: 'nearest', inline: 'nearest' });
     });
-    var loader = new Image();
     function finish(success) {
-      if (settled || request !== token || !viewer.open) return;
-      settled = true;
+      if (request !== token || !viewer.open) return;
       stage.setAttribute('aria-busy', 'false');
-      if (success && loader.naturalWidth) {
-        dimensions = { width: loader.naturalWidth, height: loader.naturalHeight };
-        photo.alt = item.alt;
-        photo.src = item.source;
+      if (success) {
+        dimensions = { width: photo.naturalWidth, height: photo.naturalHeight };
         photo.hidden = false;
         message.hidden = true;
         updateZoom();
@@ -170,10 +210,9 @@
         message.replaceChildren(document.createTextNode('这张照片未能加载。 '), link);
       }
     }
-    loader.onload = function () { finish(true); };
-    loader.onerror = function () { finish(false); };
-    loader.src = item.source;
-    if (loader.complete) finish(loader.naturalWidth > 0);
+    if (cached.state === 'loaded') finish(true);
+    else if (cached.state === 'failed') finish(false);
+    else cached.ready.then(finish);
   }
 
   function buildViewer() {
@@ -263,27 +302,39 @@
     album = available;
     title.textContent = heading;
     if (thumbnailObserver) thumbnailObserver.disconnect();
-    thumbnailObserver = typeof window.IntersectionObserver === 'function' ? new window.IntersectionObserver(function (entries) {
+    var observer = typeof window.IntersectionObserver === 'function' ? new window.IntersectionObserver(function (entries) {
+      if (observer !== thumbnailObserver) return;
       entries.forEach(function (entry) {
         if (!viewer.open || entry.target.parentNode !== thumbnails || !entry.isIntersecting) return;
         var preview = entry.target.children[0];
-        preview.src = preview.dataset.src;
-        thumbnailObserver.unobserve(entry.target);
+        if (!preview.hasAttribute('src')) preview.src = preview.dataset.src;
+        observer.unobserve(entry.target);
       });
     }, { root: thumbnails, rootMargin: '100px' }) : null;
-    thumbnails.replaceChildren();
-    album.forEach(function (item, number) {
-      var thumb = button('thumbnail', '', function () { showImage(number); });
-      thumb.setAttribute('aria-label', '查看第 ' + (number + 1) + ' 张照片' + (item.alt ? '：' + item.alt : ''));
-      var preview = element('img', '');
-      preview.alt = '';
-      preview.loading = 'lazy';
-      preview.decoding = 'async';
-      if (thumbnailObserver) preview.dataset.src = item.thumbnail;
-      else preview.src = item.thumbnail;
-      thumb.appendChild(preview);
-      thumbnails.appendChild(thumb);
+    thumbnailObserver = observer;
+    var sameAlbum = album.length === thumbnailAlbum.length && album.every(function (item, number) { return item === thumbnailAlbum[number]; });
+    if (!sameAlbum) {
+      thumbnails.replaceChildren();
+      album.forEach(function (item, number) {
+        var thumb = button('thumbnail', '', function () { showImage(number); });
+        thumb.setAttribute('aria-label', '查看第 ' + (number + 1) + ' 张照片' + (item.alt ? '：' + item.alt : ''));
+        var preview = element('img', '');
+        preview.alt = '';
+        preview.loading = 'lazy';
+        preview.decoding = 'async';
+        preview.dataset.src = item.thumbnail;
+        preview.onerror = function () { preview.removeAttribute('src'); };
+        if (!thumbnailObserver) preview.src = item.thumbnail;
+        thumb.appendChild(preview);
+        thumbnails.appendChild(thumb);
+      });
+      thumbnailAlbum = album.slice();
+    }
+    Array.from(thumbnails.children).forEach(function (thumb) {
+      var preview = thumb.children[0];
+      if (preview.hasAttribute('src')) return;
       if (thumbnailObserver) thumbnailObserver.observe(thumb);
+      else preview.src = preview.dataset.src;
     });
     opener = control;
     savedStyle = document.body.getAttribute('style');
