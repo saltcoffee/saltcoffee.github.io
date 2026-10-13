@@ -4,7 +4,7 @@
 const SITE_ROOT = new URL(self.registration.scope);
 const CACHE_PREFIX = 'guagua-blog:' + SITE_ROOT.pathname + ':';
 // Keep this value in sync with asset_version in _config.yml.
-const ASSET_VERSION = '2026-10-13-v15';
+const ASSET_VERSION = '2026-10-13-v16';
 const CACHE_NAME = CACHE_PREFIX + ASSET_VERSION;
 // Photo storage survives CSS/JS releases; metadata keeps its original response intact.
 const IMAGE_CACHE_NAME = CACHE_PREFIX + 'images-v1';
@@ -20,8 +20,8 @@ const PRECACHE_PATHS = [
   'css/gallery.css?v=' + ASSET_VERSION,
   'js/blog.js?v=' + ASSET_VERSION,
   'js/gallery.js?v=' + ASSET_VERSION,
-  'img/favicon.ico',
-  'img/favicon.svg'
+  'img/favicon.ico?v=' + ASSET_VERSION,
+  'img/favicon.svg?v=' + ASSET_VERSION
 ];
 const LEGACY_CACHES = ['precache-v1', 'runtime'];
 

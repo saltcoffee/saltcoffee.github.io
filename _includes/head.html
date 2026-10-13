@@ -7,11 +7,11 @@
   <title>{% if page.title %}{{ page.title | escape }} · {% endif %}{{ site.SEOTitle | escape }}</title>
   <meta name="description" content="{{ meta_description | strip_html | normalize_whitespace | escape }}">
   <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}">
-  <link rel="alternate icon" href="{{ '/img/favicon.ico' | relative_url }}">
-  <link rel="icon" type="image/svg+xml" href="{{ '/img/favicon.svg' | relative_url }}">
-  <link rel="apple-touch-icon" href="{{ '/pwa/icons/512.png' | relative_url }}">
+  <link rel="alternate icon" href="{{ '/img/favicon.ico' | relative_url }}?v={{ site.asset_version | escape }}">
+  <link rel="icon" type="image/svg+xml" href="{{ '/img/favicon.svg' | relative_url }}?v={{ site.asset_version | escape }}">
+  <link rel="apple-touch-icon" href="{{ '/pwa/icons/512.png' | relative_url }}?v={{ site.asset_version | escape }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.SEOTitle | escape }}" href="{{ '/feed.xml' | relative_url }}">
-  <link rel="manifest" href="{{ '/pwa/manifest.json' | relative_url }}">
+  <link rel="manifest" href="{{ '/pwa/manifest.json' | relative_url }}?v={{ site.asset_version | escape }}">
   <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:site_name" content="{{ site.SEOTitle | escape }}">
