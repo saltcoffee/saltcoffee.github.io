@@ -4,7 +4,7 @@
 const SITE_ROOT = new URL(self.registration.scope);
 const CACHE_PREFIX = 'guagua-blog:' + SITE_ROOT.pathname + ':';
 // Keep this value in sync with asset_version in _config.yml.
-const ASSET_VERSION = '2026-10-13-v11';
+const ASSET_VERSION = '2026-10-13-v12';
 const CACHE_NAME = CACHE_PREFIX + ASSET_VERSION;
 const OFFLINE_URL = new URL('offline.html', SITE_ROOT).href;
 const PRECACHE_PATHS = [

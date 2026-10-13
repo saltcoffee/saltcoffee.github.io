@@ -1,10 +1,6 @@
 /* 文章图片浏览 */
 .prose .photo-link { display: block; width: fit-content; max-width: 100%; margin-inline: auto; line-height: 0; cursor: zoom-in; }
 .film-photo .photo-link { width: 100%; }
-.photo-gallery-tools { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 28px 0 18px; padding: 12px 0; border-block: 1px solid var(--line); color: var(--muted); font: 12px/1.6 var(--sans); }
-.photo-gallery-tools button { min-height: 40px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 3px; background: transparent; color: var(--accent); font: inherit; }
-.photo-gallery-tools button:hover { border-color: var(--accent); background: var(--wash); }
-.photo-gallery-tools + .film-photo { margin-top: 24px; }
 .photo-viewer { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: #111513; color: #edf2ee; font: 14px/1.5 var(--sans); overflow: hidden; }
 .photo-viewer[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
 .photo-viewer::backdrop { background: #111513; }
@@ -56,5 +52,5 @@
   .photo-viewer__footer { min-height: 34px; padding-block: 6px; }
 }
 @media print {
-  .photo-gallery-tools, .photo-viewer { display: none !important; }
+  .photo-viewer { display: none !important; }
 }
