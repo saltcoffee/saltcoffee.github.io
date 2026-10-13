@@ -4,7 +4,7 @@
 const SITE_ROOT = new URL(self.registration.scope);
 const CACHE_PREFIX = 'guagua-blog:' + SITE_ROOT.pathname + ':';
 // Keep this value in sync with asset_version in _config.yml.
-const ASSET_VERSION = '2026-10-13-v17';
+const ASSET_VERSION = '2026-10-13-v18';
 const CACHE_NAME = CACHE_PREFIX + ASSET_VERSION;
 // Photo storage survives CSS/JS releases; metadata keeps its original response intact.
 const IMAGE_CACHE_NAME = CACHE_PREFIX + 'images-v1';
@@ -31,7 +31,8 @@ function isSiteURL(value) {
 }
 
 function canCache(request, response) {
-  return request.method === 'GET' && isSiteURL(request.url) &&
+  return request.method === 'GET' && request.cache !== 'no-store' &&
+    !responseHasNoStore(response) && isSiteURL(request.url) &&
     response.status === 200 && response.type !== 'opaque' &&
     (!response.url || isSiteURL(response.url));
 }
@@ -39,20 +40,21 @@ function canCache(request, response) {
 async function storeResponse(request, response) {
   if (!canCache(request, response)) return;
   try {
+    const copy = response.clone();
     const cache = await caches.open(CACHE_NAME);
-    await cache.put(request, response.clone());
+    await cache.put(request, copy);
   } catch (_) {
     // A full or unavailable cache must not interrupt online reading.
   }
 }
 
-function imageResponseHasNoStore(response) {
+function responseHasNoStore(response) {
   return /(?:^|,)\s*no-store(?:\s*(?:,|=|$))/i.test(response.headers.get('Cache-Control') || '');
 }
 
 function canCacheImage(request, response) {
   return request.method === 'GET' && request.cache !== 'no-store' &&
-    /^https?:$/.test(new URL(request.url).protocol) && !imageResponseHasNoStore(response) &&
+    /^https?:$/.test(new URL(request.url).protocol) && !responseHasNoStore(response) &&
     response.status === 200 && response.type !== 'opaque' &&
     /^image\//i.test((response.headers.get('Content-Type') || '').trim());
 }
@@ -138,6 +140,7 @@ async function storeImageResponse(request, response) {
 
 async function imageCacheFirst(event) {
   const request = event.request;
+  // A reload or no-cache request is an explicit request for server truth.
   if (!['no-store', 'reload', 'no-cache'].includes(request.cache)) {
     try {
       const cached = await readCachedImage(request);
@@ -149,7 +152,7 @@ async function imageCacheFirst(event) {
   try {
     const response = await fetch(request);
     if (request.cache !== 'no-store') {
-      const storage = imageResponseHasNoStore(response) ?
+      const storage = responseHasNoStore(response) ?
         forgetCachedImage(request) : storeImageResponse(request, response);
       event.waitUntil(storage.catch(() => undefined));
     }
@@ -161,16 +164,19 @@ async function imageCacheFirst(event) {
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    await Promise.all(PRECACHE_PATHS.map(async path => {
-      const request = new Request(new URL(path, SITE_ROOT).href, {
-        cache: 'reload',
-        credentials: 'same-origin'
-      });
-      const response = await fetch(request);
-      if (!canCache(request, response)) throw new Error('Offline asset unavailable: ' + path);
-      await cache.put(request, response);
-    }));
+    try {
+      const cache = await caches.open(CACHE_NAME);
+      await Promise.allSettled(PRECACHE_PATHS.map(async path => {
+        const request = new Request(new URL(path, SITE_ROOT).href, {
+          cache: 'reload',
+          credentials: 'same-origin'
+        });
+        const response = await fetch(request);
+        if (canCache(request, response)) await cache.put(request, response);
+      }));
+    } catch (_) {
+      // Offline storage is optional; a quota error must not preserve an old worker.
+    }
     await self.skipWaiting();
   })());
 });
@@ -193,61 +199,59 @@ async function clearOldCaches() {
   }));
 }
 
-async function cacheOpenPages() {
-  const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-  const urls = [...new Set(windows.map(client => client.url).filter(isSiteURL))];
-  await Promise.all(urls.map(async url => {
-    try {
-      const request = new Request(url, { cache: 'no-cache', credentials: 'same-origin' });
-      await storeResponse(request, await fetch(request));
-    } catch (_) {
-      // Only pages already open are fetched; photos are cached as they are viewed.
-    }
-  }));
-}
-
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    await clearOldCaches();
+    try {
+      await clearOldCaches();
+    } catch (_) {
+      // The new worker can still serve fresh content when cache cleanup fails.
+    }
     await self.clients.claim();
-    // The first page load happened before this worker controlled the window.
-    await cacheOpenPages();
   })());
 });
 
-async function networkFirst(request) {
-  try {
-    const response = await fetch(request, { cache: 'no-cache' });
-    await storeResponse(request, response);
-    return response;
-  } catch (_) {
-    const cache = await caches.open(CACHE_NAME);
-    return await cache.match(request) || await cache.match(OFFLINE_URL) || Response.error();
-  }
+// Fetch normally merges an HTTP 304 with its cached body. Explicit conditional
+// headers can expose a bare 304, so retry without them before considering offline.
+function responseNeedsReload(response) {
+  return response.status === 304 || response.status === 0;
 }
 
-function staleWhileRevalidate(event) {
+async function fetchFresh(request) {
+  const cacheMode = request.cache === 'no-store' ? 'no-store' : 'no-cache';
+  let response = await fetch(request, { cache: cacheMode });
+  if (responseNeedsReload(response)) {
+    const headers = new Headers(request.headers);
+    headers.delete('If-None-Match');
+    headers.delete('If-Modified-Since');
+    response = await fetch(request, { cache: cacheMode === 'no-store' ? 'no-store' : 'reload', headers });
+  }
+  if (responseNeedsReload(response)) throw new Error('Response has no usable body');
+  return response;
+}
+
+async function cachedFallback(request, allowOfflinePage) {
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = request.cache !== 'no-store' && await cache.match(request);
+    if (cached) return cached;
+    // Styles and scripts must never receive an HTML offline page.
+    if (allowOfflinePage) return await cache.match(OFFLINE_URL) || Response.error();
+  } catch (_) {
+    // Storage may also be unavailable when the network is disconnected.
+  }
+  return Response.error();
+}
+
+async function networkFirst(event, allowOfflinePage) {
   const request = event.request;
-  const network = fetch(request).then(async response => {
-    await storeResponse(request, response);
+  try {
+    const response = await fetchFresh(request);
+    // Return fresh content even if a cache write is slow or fails.
+    event.waitUntil(storeResponse(request, response).catch(() => undefined));
     return response;
-  });
-  event.waitUntil(network.then(() => undefined).catch(() => undefined));
-  return (async () => {
-    try {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(request);
-      if (cached) return cached;
-    } catch (_) {
-      // Private browsing or a storage limit can make Cache Storage unavailable.
-    }
-    try {
-      return await network;
-    } catch (_) {
-      // Returning HTML for a missing image, stylesheet or script is incorrect.
-      return Response.error();
-    }
-  })();
+  } catch (_) {
+    return cachedFallback(request, allowOfflinePage);
+  }
 }
 
 self.addEventListener('fetch', event => {
@@ -264,12 +268,16 @@ self.addEventListener('fetch', event => {
   if (!isSiteURL(request.url)) return;
   if (url.pathname === new URL('sw.js', SITE_ROOT).pathname) return;
   if (request.mode === 'navigate') {
-    const response = networkFirst(request);
+    const response = networkFirst(event, true);
     event.respondWith(response);
     event.waitUntil(response.then(() => undefined).catch(() => undefined));
     return;
   }
   const isAsset = ['style', 'script', 'image', 'font', 'manifest'].includes(request.destination) ||
     /\.(?:css|js|jpe?g|png|gif|webp|avif|svg|ico|woff2?|ttf|otf)$/i.test(url.pathname);
-  if (isAsset) event.respondWith(staleWhileRevalidate(event));
+  if (isAsset) {
+    const response = networkFirst(event, false);
+    event.respondWith(response);
+    event.waitUntil(response.then(() => undefined).catch(() => undefined));
+  }
 });

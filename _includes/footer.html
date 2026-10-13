@@ -5,12 +5,3 @@
     <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
   </div>
 </footer>
-{% if site.service-worker %}
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register({{ '/sw.js' | relative_url | jsonify }}, { updateViaCache: 'none' }).catch(function () {});
-    });
-  }
-</script>
-{% endif %}

@@ -3,6 +3,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f6f8f7">
+  {% if site.service-worker %}
+  <script>
+    if ('serviceWorker' in navigator) {
+      function registerBlogWorker() {
+        navigator.serviceWorker.register({{ '/sw.js' | relative_url | jsonify }}, { updateViaCache: 'none' }).catch(function () {});
+      }
+      // Returning visitors check updates early; first visits prioritize rendering.
+      if (navigator.serviceWorker.controller) registerBlogWorker();
+      else window.addEventListener('load', registerBlogWorker, { once: true });
+    }
+  </script>
+  {% endif %}
   {% assign meta_description = page.description | default: page.summary | default: site.description %}
   <title>{% if page.title %}{{ page.title | escape }} · {% endif %}{{ site.SEOTitle | escape }}</title>
   <meta name="description" content="{{ meta_description | strip_html | normalize_whitespace | escape }}">
