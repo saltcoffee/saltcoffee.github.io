@@ -14,7 +14,7 @@
        data-env-id="{{ twikoo_env_id | escape }}"
        data-region="{{ site.twikoo.region | default: '' | strip | escape }}"
        data-client-url="{{ twikoo_client_url | escape }}"
-       data-path="{{ page.url | relative_url | escape }}"
+       data-path="{{ page.comment_path | default: page.url | relative_url | escape }}"
        data-lang="{{ site.lang | default: 'zh-CN' | escape }}"></div>
   <noscript><p>请启用 JavaScript 后查看和发表评论。</p></noscript>
   {% else %}

@@ -29,7 +29,7 @@ permalink: /articles/weekend-film/
 
 草稿增加 `published: false`，正式发布时移除。独立页面或隐私政策增加 `listed: false`，不进入文章列表、标签、RSS与相邻文章导航。长文可增加 `catalog: true` 自动生成目录。
 
-原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。现有摄影文章迁入 `_articles`，通过 `permalink` 保留旧链接；两份隐私政策也保留原地址。
+原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。摄影文章位于 `_articles`，地址已改为 `/articles/2025年我用胶片拍了些什么/`；原来的日期地址通过 `redirects/film-2025.html` 自动跳转，保留查询参数和锚点。两份隐私政策保留原地址。
 
 ## 图片浏览
 
@@ -56,6 +56,8 @@ Twikoo 需要单独的后端服务，GitHub Pages 只负责托管博客。可参
 客户端固定版本，需与后端保持一致。服务地址使用精简客户端，腾讯云环境自动使用包含 CloudBase SDK 的完整客户端。`env_id` 留空或只有空格时不加载客户端，页面显示“评论暂未开放”。
 
 评论按文章的固定 URL 路径关联，标题修改不会改变对应评论。路径统一使用浏览器 `pathname` 的编码形式（中文转为 `%…`），部署在项目子路径时也包含 `baseurl`，与已有评论的地址保持一致。
+
+已发布文章更换地址时，可在 front matter 增加 `comment_path: /原来的文章路径/`，让评论继续使用原路径，无需迁移数据库。摄影文章保留了原日期路径作为评论标识；新文章不需要此项，默认使用文章 URL。旧链接的跳转页需同步指向新地址。
 
 Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认开启。现代 Safari 的 macOS UA 固定报告 `10_15_7`，无法据此获取真实系统版本；前端将有歧义的“macOS Catalina”标签显示为“macOS”，保留数据库的原始 UA。其他已识别的系统版本与浏览器标签继续显示。Twikoo 2.0.13 会在浏览器提供 User-Agent Client Hints 时补充系统版本，因此部分 Chromium 浏览器能显示 Sequoia 等名称。
 
