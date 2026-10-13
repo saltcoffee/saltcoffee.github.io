@@ -1,3 +1,6 @@
+---
+layout: null
+---
 {
   "name": "瓜瓜的博客",
   "short_name": "瓜瓜的博客",
@@ -7,11 +10,11 @@
   "start_url": "../",
   "scope": "../",
   "icons": [{
-    "src": "icons/128.png",
+    "src": "icons/128.png?v={{ site.asset_version | url_encode }}",
     "sizes": "128x128",
     "type": "image/png"
   }, {
-    "src": "icons/512.png",
+    "src": "icons/512.png?v={{ site.asset_version | url_encode }}",
     "sizes": "512x512",
     "type": "image/png"
   }],
