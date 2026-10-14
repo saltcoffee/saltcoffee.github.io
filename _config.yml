@@ -22,6 +22,8 @@ twikoo:
 
 markdown: kramdown
 highlighter: rouge
+plugins:
+  - jekyll-sitemap
 permalink: pretty
 kramdown:
   input: GFM
@@ -46,6 +48,24 @@ defaults:
     values:
       layout: post
       tags: []
+
+  # 这些文件仍正常发布，但不作为搜索引擎的内容页面提交。
+  - scope:
+      path: "google*.html"
+    values:
+      sitemap: false
+  - scope:
+      path: "404.html"
+    values:
+      sitemap: false
+  - scope:
+      path: "offline.html"
+    values:
+      sitemap: false
+  - scope:
+      path: "redirects"
+    values:
+      sitemap: false
 
 service-worker: true
 exclude:
