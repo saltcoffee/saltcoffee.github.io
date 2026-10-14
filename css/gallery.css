@@ -1,6 +1,6 @@
 /* 文章图片浏览 */
-.prose .photo-link { display: block; width: fit-content; max-width: 100%; margin-inline: auto; line-height: 0; cursor: zoom-in; }
-.prose .film-photo > img:where(:not([hidden]):not([data-failed="true"])), .prose img.photo-zoomable { cursor: zoom-in; }
+.prose .photo-link { display: block; width: fit-content; max-width: 100%; margin-inline: auto; line-height: 0; cursor: pointer; }
+.prose .film-photo > img:where(:not([hidden]):not([data-failed="true"])), .prose img.photo-zoomable { cursor: pointer; }
 .prose [data-gallery-ignore] img, .prose img[data-gallery-ignore] { cursor: inherit; }
 .film-photo .photo-link { width: 100%; }
 .photo-viewer { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: #edf2ee; font: 14px/1.5 var(--sans); overflow: hidden; }
