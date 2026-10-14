@@ -1,7 +1,7 @@
 title: 瓜瓜的博客
 SEOTitle: 瓜瓜的博客
 description: “Talk is cheap, show me the Bug."
-url: "https://saltcoffee.github.io"
+url: "https://blog.redpencil.top"
 baseurl: ""
 # 修改静态资源时，与 sw.js 中的 ASSET_VERSION 同步更新。
 asset_version: "2026-10-13-v20"
