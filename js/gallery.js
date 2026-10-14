@@ -377,6 +377,7 @@
       var alt = image.getAttribute('alt') || '';
       var description = figcaption ? Array.from(figcaption.childNodes).map(function (node) { return node.textContent.trim(); }).filter(Boolean).join(' ') : alt;
       var item = { image: image, link: link, source: source, thumbnail: imageURL(image.dataset.galleryThumb || image.currentSrc || image.getAttribute('src')) || source, alt: alt, caption: description, valid: true };
+      image.classList.add('photo-zoomable');
       if (!link.hasAttribute('aria-label')) link.setAttribute('aria-label', alt ? '查看照片：' + alt : '查看第 ' + (items.length + 1) + ' 张照片');
       link.addEventListener('click', function (event) {
         if (event.defaultPrevented || event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || !usable(item)) return;
@@ -384,6 +385,7 @@
       });
       image.addEventListener('error', function () {
         item.valid = false;
+        image.classList.remove('photo-zoomable');
         if (generated) { link.removeAttribute('href'); link.removeAttribute('aria-label'); link.classList.remove('photo-link'); }
       }, { once: true });
       items.push(item);
