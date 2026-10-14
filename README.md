@@ -1,6 +1,6 @@
 # 瓜瓜的博客
 
-基于 Jekyll 的 GitHub Pages 博客。首页、文章、标签与 RSS 同时支持新的 `_articles` 和原来的 `_posts`，不需要额外构建插件。
+基于 Jekyll 的 GitHub Pages 博客。首页、文章、标签与 RSS 同时支持新的 `_articles` 和原来的 `_posts`，站点地图由 GitHub Pages 支持的 `jekyll-sitemap` 自动生成。
 
 ## 写文章
 
@@ -80,6 +80,12 @@ Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认�
 设置 `enabled: false` 可以关闭全站评论。单篇文章的 front matter 增加 `comments: false` 可以只关闭该篇评论。文章和关于页加载评论；首页、标签和独立隐私政策不加载评论。关于页评论单独关联 `/about/`，不与文章评论混合。
 
 原 Utterances 的评论仍保存在 GitHub Issues 中，不会自动迁移到 Twikoo；本次替换不修改 GitHub 中的内容。
+
+## Google 搜索收录
+
+每次构建会自动生成根目录的 `sitemap.xml` 和 `robots.txt`，使用 `_config.yml` 中的正式域名。站点地图包含首页、关于页、标签页及已发布文章，排除 Google 验证文件、404 页、离线页和旧地址跳转页。需要单独排除某篇文章或页面时，在 front matter 中添加 `sitemap: false`；`listed: false` 只影响文章列表、标签和 RSS，不控制搜索收录。
+
+发布后确认 https://blog.redpencil.top/sitemap.xml 可以打开，再在 Google Search Console 的 `https://blog.redpencil.top/` 资源中进入「站点地图」，提交 `sitemap.xml`。后续发布文章会自动更新地图，通常不需要重新提交。Google 所有权验证文件必须继续保留。
 
 ## 本地预览
 

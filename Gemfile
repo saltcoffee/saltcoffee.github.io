@@ -1,8 +1,9 @@
 source "https://rubygems.org"
 
 # Keep the renderer aligned with https://pages.github.com/versions/.
-# The site uses native Jekyll collections and does not need extra plugins.
+# Content uses native Jekyll collections; the sitemap uses a Pages-supported plugin.
 gem "jekyll", "3.10.0"
+gem "jekyll-sitemap", "1.4.0"
 gem "kramdown", "2.4.0"
 gem "kramdown-parser-gfm", "1.1.0"
 gem "rouge", "3.30.0"
