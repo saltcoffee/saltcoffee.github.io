@@ -7,15 +7,28 @@
   --accent: #3c654d;
   --line: #dce3dd;
   --wash: #eaf0eb;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
-  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  /* 系统字体优先（Mac 西文 SF Pro、中文苹方），其余与 V2EX 一致（https://www.v2ex.com/ 的 body 声明），逐字回退。 */
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Luxi Sans", "Segoe UI", "Hiragino Sans GB", "Microsoft Yahei", sans-serif, "Apple Logo";
+  /* 代码/等宽字体。系统字体优先（Mac 用 SF Mono），其余与 V2EX 的 --code-font 对齐。
+     注意：V2EX 的代码栈尾部还带 "Microsoft Yahei"，那是比例字体，
+     放进等宽栈会让中英混排的代码块对不齐，故保留 monospace 作为兜底。 */
+  --mono: "SFMono-Regular", Consolas, "Panic Sans", "Bitstream Vera Sans Mono", Menlo, "Liberation Mono", monospace;
+  /* 标题字重。必须避开 500：Segoe UI / 微软雅黑 只有 Regular(400) 与 Bold(700)，
+     没有原生 Medium，请求 500 会触发合成加粗，小字号下笔画发虚、字距发挤。
+     400 与 V2EX 帖子标题 (.item_title 未设字重，即 400) 完全一致。 */
+  --title-weight: 400;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 36px; -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--paper); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+/* 注意：不要加 -webkit-font-smoothing: antialiased。
+   它会强制灰度抗锯齿，在 Windows 上让文字变细发虚，与 V2EX 的观感不同。
+   V2EX 只在 .fa 图标上用它，正文与标题都用系统默认（ClearType 次像素抗锯齿）。 */
+body { margin: 0; background: var(--paper); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; }
 body > main { min-height: calc(100svh - 215px); }
 a { color: inherit; text-decoration: none; text-underline-offset: 5px; }
-button, input { font: inherit; }
+/* 表单控件默认不继承字体，浏览器会用系统 UI 字体，导致搜索框/按钮与全站不一致。
+   这里覆盖全部表单控件类型（含 textarea、select、option），统一到 var(--sans)。 */
+button, input, textarea, select, optgroup { font: inherit; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; }
 img { max-width: 100%; height: auto; display: block; }
@@ -33,22 +46,22 @@ h1, h2, h3, p { margin: 0; }
 .header-actions { display: flex; align-items: center; gap: 28px; min-width: 0; }
 .wordmark { display: flex; align-items: baseline; gap: 13px; }
 .wordmark-name { color: var(--ink); font: 600 26px/1.2 var(--sans); letter-spacing: 0; }
-.site-nav { display: flex; align-items: center; gap: 24px; font-size: 14px; white-space: nowrap; }
+.site-nav { display: flex; align-items: center; gap: 24px; font-family: var(--sans); font-size: 14px; white-space: nowrap; }
 .site-nav a { position: relative; color: var(--muted); padding-block: 6px; }
 .site-nav a:hover, .site-nav a[aria-current] { color: var(--ink); }
 .site-nav a[aria-current]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: var(--accent); }
 .site-nav .nav-rss { display: flex; padding: 10px; }
 .header-search { display: flex; flex-shrink: 0; align-items: center; width: 200px; min-height: 42px; padding-left: 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--wash); color: var(--muted); }
 .header-search:focus-within { border-color: var(--accent); background: var(--paper); }
-.header-search input { width: 100%; min-width: 0; padding: 7px 0; border: 0; border-radius: 0; background: transparent; color: var(--ink); font-size: 13px; line-height: 1.5; }
+.header-search input { width: 100%; min-width: 0; padding: 7px 0; border: 0; border-radius: 0; background: transparent; color: var(--ink); font-family: var(--sans); font-size: 13px; line-height: 1.5; }
 .header-search input::placeholder { color: var(--muted); opacity: 1; }
-.header-search button { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--accent); }
+.header-search button { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--accent); font-family: var(--sans); }
 .header-search button:hover { color: var(--ink); }
 .home { padding-top: 52px; }
 .eyebrow { color: var(--muted); font-size: 12px; letter-spacing: .12em; margin-bottom: 21px; }
 .writing { max-width: 900px; padding-bottom: 78px; }
 .section-bar { display: flex; align-items: baseline; gap: 16px; margin-bottom: 22px; }
-.section-bar h2 { font-size: 14px; font-weight: 500; color: var(--ink); }
+.section-bar h2 { font-size: 14px; font-weight: var(--title-weight); color: var(--ink); }
 .article-count { margin-left: 8px; font: 11px var(--sans); color: var(--muted); vertical-align: middle; }
 .article-year-group { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 32px; padding-block: 24px; border-top: 1px solid var(--line); }
 .article-year-group:first-child { padding-top: 0; border-top: 0; }
@@ -56,7 +69,7 @@ h1, h2, h3, p { margin: 0; }
 .article-year { padding-top: 10px; color: var(--ink); font: 700 14px/1.8 var(--sans); font-variant-numeric: tabular-nums; }
 .article-year-entries { min-width: 0; }
 .article-entry { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
-.article-entry-title { min-width: 0; margin: 0; font: 500 18px/1.65 var(--sans); color: var(--ink); overflow-wrap: anywhere; }
+.article-entry-title { min-width: 0; margin: 0; font: var(--title-weight) 16px/1.65 var(--sans); color: var(--ink); overflow-wrap: anywhere; }
 .article-entry-title a { display: block; padding-block: 8px; }
 .article-entry-title a:hover { color: var(--accent); text-decoration: underline; }
 .article-entry-date { flex-shrink: 0; color: var(--muted); font: 12px/1.5 var(--sans); font-variant-numeric: tabular-nums; }
@@ -149,7 +162,7 @@ h1, h2, h3, p { margin: 0; }
 .about-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 26px; margin-top: 28px; font-size: 13px; color: var(--accent); }
 .about-links a { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; }
 .about-social-link { transition: color .18s ease; }
-.about-link-label { position: relative; font-weight: 500; }
+.about-link-label { position: relative; font-weight: var(--title-weight); }
 .about-link-label::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .18s ease; }
 .about-link-icon { transition: transform .18s ease; }
 .about-link-arrow { color: var(--muted); opacity: .65; transition: transform .18s ease, opacity .18s ease; }
@@ -189,7 +202,7 @@ h1, h2, h3, p { margin: 0; }
   .article-year-group { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-block: 20px; }
   .article-year { padding-top: 0; font-size: 13px; }
   .article-entry { gap: 18px; }
-  .article-entry-title { font-size: 16px; }
+  .article-entry-title { font-size: 14px; }
   .article-entry-date { font-size: 11px; }
   .article-meta { font-size: 11px; gap: 12px; }
   .article-meta time { font-size: 10px; }
@@ -249,7 +262,8 @@ h1, h2, h3, p { margin: 0; }
 .post-comments { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
 .post-comments h2 { margin-bottom: 18px; font-size: 18px; font-weight: 600; color: var(--ink); }
 .post-comments .twikoo { max-width: 100%; margin-inline: 0; color: var(--text); font: 14px/1.7 var(--sans); }
-.post-comments .twikoo input, .post-comments .twikoo textarea, .post-comments .twikoo button { font-family: var(--sans); }
+/* Twikoo 自身打包文件里不含任何 font-family 声明，字体全靠继承；
+   其注入的 input/textarea/button 由上面的 `button, input, textarea, select` 统一接管。 */
 .post-comments .twikoo .tk-submit input.tk-input__inner,
 .post-comments .twikoo .tk-submit .tk-input-group__prepend { height: 40px; line-height: 40px; }
 .post-comments .twikoo .tk-submit .tk-input-group__prepend { background: var(--wash); }
