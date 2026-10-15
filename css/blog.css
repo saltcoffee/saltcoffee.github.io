@@ -13,9 +13,9 @@
      注意：V2EX 的代码栈尾部还带 "Microsoft Yahei"，那是比例字体，
      放进等宽栈会让中英混排的代码块对不齐，故保留 monospace 作为兜底。 */
   --mono: "SFMono-Regular", Consolas, "Panic Sans", "Bitstream Vera Sans Mono", Menlo, "Liberation Mono", monospace;
-  /* 标题字重。必须避开 500：Segoe UI / 微软雅黑 只有 Regular(400) 与 Bold(700)，
-     没有原生 Medium，请求 500 会触发合成加粗，小字号下笔画发虚、字距发挤。
-     400 与 V2EX 帖子标题 (.item_title 未设字重，即 400) 完全一致。 */
+  /* 内容级标题字重。必须避开 500：Segoe UI 与微软雅黑都只有 Regular(400)/Bold(700)，
+     没有原生中间字重，请求 500 会触发合成加粗 —— 中文尤其明显（笔画发虚、字距发挤）。
+     400 与 V2EX 帖子标题一致，是 Windows 上唯一干净的选择。 */
   --title-weight: 400;
 }
 * { box-sizing: border-box; }
@@ -45,7 +45,7 @@ h1, h2, h3, p { margin: 0; }
 .site-header { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding-block: 28px 24px; border-bottom: 1px solid var(--line); }
 .header-actions { display: flex; align-items: center; gap: 28px; min-width: 0; }
 .wordmark { display: flex; align-items: baseline; gap: 13px; }
-.wordmark-name { color: var(--ink); font: 600 26px/1.2 var(--sans); letter-spacing: 0; }
+.wordmark-name { color: var(--ink); font: 600 18px/1.2 var(--sans); letter-spacing: 0; }
 .site-nav { display: flex; align-items: center; gap: 24px; font-family: var(--sans); font-size: 14px; white-space: nowrap; }
 .site-nav a { position: relative; color: var(--muted); padding-block: 6px; }
 .site-nav a:hover, .site-nav a[aria-current] { color: var(--ink); }
@@ -61,7 +61,7 @@ h1, h2, h3, p { margin: 0; }
 .eyebrow { color: var(--muted); font-size: 12px; letter-spacing: .12em; margin-bottom: 21px; }
 .writing { max-width: 900px; padding-bottom: 78px; }
 .section-bar { display: flex; align-items: baseline; gap: 16px; margin-bottom: 22px; }
-.section-bar h2 { font-size: 14px; font-weight: var(--title-weight); color: var(--ink); }
+.section-bar h2 { font-size: 14px; font-family: var(--sans); font-weight: var(--title-weight); color: var(--ink); }
 .article-count { margin-left: 8px; font: 11px var(--sans); color: var(--muted); vertical-align: middle; }
 .article-year-group { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 32px; padding-block: 24px; border-top: 1px solid var(--line); }
 .article-year-group:first-child { padding-top: 0; border-top: 0; }
@@ -88,7 +88,7 @@ h1, h2, h3, p { margin: 0; }
 .footer-links a:hover { color: var(--ink); text-decoration: underline; }
 .page-content, .tags-page { padding-block: 68px 90px; }
 .page-heading { margin-bottom: 45px; }
-.page-heading h1, .error-page h1 { font: 600 36px/1.4 var(--sans); color: var(--ink); }
+.page-heading h1, .error-page h1 { font: var(--title-weight) 22px/1.4 var(--sans); color: var(--ink); }
 .page-description { color: var(--muted); font-size: 14px; margin-top: 15px; }
 .post { padding: 48px 0 80px; }
 /* 宽屏时居于正文与视口右边缘之间，窄屏时保留至少 24px 外边距。 */
@@ -98,12 +98,12 @@ h1, h2, h3, p { margin: 0; }
 .back-link:hover { color: var(--accent); text-decoration: underline; }
 .post-heading { margin-bottom: 35px; }
 .post-heading .article-meta { margin-top: 44px; }
-.post-heading h1 { color: var(--ink); font: 600 clamp(28px, 3.5vw, 36px)/1.5 var(--sans); letter-spacing: -.025em; margin-top: 16px; text-wrap: pretty; }
+.post-heading h1 { color: var(--ink); font: var(--title-weight) clamp(21px, 2.5vw, 26px)/1.5 var(--sans); letter-spacing: -.02em; margin-top: 16px; text-wrap: pretty; }
 .post-subtitle { font-size: 18px; color: var(--muted); margin-top: 12px; }
 .post-author { font-size: 12px; color: var(--muted); margin-top: 18px; }
 .prose { font-size: 17px; line-height: 1.95; overflow-wrap: break-word; }
 .prose p { margin: 0 0 1.4em; }
-.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 { color: var(--ink); font-weight: 600; line-height: 1.5; margin: 2em 0 .8em; scroll-margin-top: 30px; }
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 { color: var(--ink); font-family: var(--sans); font-weight: var(--title-weight); line-height: 1.5; margin: 2em 0 .8em; scroll-margin-top: 30px; }
 .prose h1 { font-size: 30px; }
 .prose h2 { font-size: 25px; }
 .prose h3 { font-size: 21px; }
@@ -146,7 +146,7 @@ h1, h2, h3, p { margin: 0; }
 .tag-index a { border: 1px solid var(--line); color: var(--accent); padding: 7px 18px; border-radius: 3px; font-size: 13px; }
 .tag-index a:hover { background: var(--wash); border-color: #b4c9b8; }
 .tag-section { margin-top: 40px; scroll-margin-top: 36px; }
-.tag-section h2 { font: 600 23px/1.4 var(--sans); color: var(--ink); margin-bottom: 15px; }
+.tag-section h2 { font: var(--title-weight) 18px/1.4 var(--sans); color: var(--ink); margin-bottom: 15px; }
 .archive-row { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--line); padding: 18px 0; }
 .archive-row a { font-size: 15px; color: var(--text); }
 .archive-row a:hover { color: var(--accent); }
@@ -162,7 +162,7 @@ h1, h2, h3, p { margin: 0; }
 .about-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 26px; margin-top: 28px; font-size: 13px; color: var(--accent); }
 .about-links a { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; }
 .about-social-link { transition: color .18s ease; }
-.about-link-label { position: relative; font-weight: var(--title-weight); }
+.about-link-label { position: relative; font-family: var(--sans); font-weight: var(--title-weight); }
 .about-link-label::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .18s ease; }
 .about-link-icon { transition: transform .18s ease; }
 .about-link-arrow { color: var(--muted); opacity: .65; transition: transform .18s ease, opacity .18s ease; }
@@ -193,7 +193,7 @@ h1, h2, h3, p { margin: 0; }
   .header-search { width: min(100%, 200px); margin-left: auto; }
   .header-search input { font-size: 16px; }
   .wordmark { gap: 0; }
-  .wordmark-name { font-size: 25px; }
+  .wordmark-name { font-size: 17px; }
   .site-nav { gap: 16px; margin-left: auto; font-size: 13px; }
   .site-nav .nav-rss { padding: 8px; margin-right: -8px; }
   .home { padding-top: 34px; }
@@ -213,7 +213,7 @@ h1, h2, h3, p { margin: 0; }
   .post { padding-block: 30px 55px; }
   .back-to-top { bottom: calc(16px + env(safe-area-inset-bottom)); }
   .post-heading .article-meta { margin-top: 32px; }
-  .post-heading h1 { font-size: 28px; line-height: 1.5; }
+  .post-heading h1 { font-size: 21px; line-height: 1.5; }
   .prose { font-size: 16px; line-height: 1.95; }
   .film-photo { margin-block: 32px; }
   .film-photo figcaption { font-size: 9px; }
@@ -221,7 +221,7 @@ h1, h2, h3, p { margin: 0; }
   .post-pagination { gap: 20px; }
   .post-pagination a { font-size: 12px; }
   .page-content, .tags-page { padding-block: 44px 60px; }
-  .page-heading h1, .error-page h1 { font-size: 30px; }
+  .page-heading h1, .error-page h1 { font-size: 19px; }
   .page-heading { margin-bottom: 32px; }
   .archive-row { display: block; padding-block: 15px; }
   .archive-row time { display: block; margin-top: 8px; }
