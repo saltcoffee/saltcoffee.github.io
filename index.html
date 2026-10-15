@@ -4,9 +4,6 @@ layout: default
 {% include articles.html %}
 <div class="shell home">
   <section class="writing" id="writing" aria-labelledby="writing-title" data-article-index>
-    <div class="section-bar">
-      <h2 id="writing-title">文章 <span class="article-count">{{ articles.size }}</span></h2>
-    </div>
     <div class="article-list">
       {% assign year_groups = dated_articles | group_by_exp: 'post', "post.date | date: '%Y'" %}
       {% for year_group in year_groups %}
