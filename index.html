@@ -3,28 +3,33 @@ layout: default
 ---
 {% include articles.html %}
 <div class="shell home">
-  <section class="home-intro" aria-labelledby="home-title">
-    <p class="intro-description"></p>
-  </section>
-
   <section class="writing" id="writing" aria-labelledby="writing-title" data-article-index>
     <div class="section-bar">
       <h2 id="writing-title">文章 <span class="article-count">{{ articles.size }}</span></h2>
     </div>
     <div class="article-list">
-      {% for post in articles %}
-      <article class="article-entry" data-article data-search="{{ post.title | append: ' ' | append: post.subtitle | append: ' ' | append: post.summary | append: ' ' | append: post.content | strip_html | normalize_whitespace | escape }} {{ post.tags | join: ' ' | escape }}">
-        <div class="article-entry-copy">
-          {% include article-meta.html article=post %}
-          <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
-          {% if post.subtitle %}<p class="article-subtitle">{{ post.subtitle | escape }}</p>{% endif %}
-          <p class="article-summary">{{ post.summary | default: post.excerpt | strip_html | normalize_whitespace | truncate: 135 }}</p>
-          <a class="read-link" href="{{ post.url | relative_url }}" aria-label="阅读：{{ post.title | escape }}">阅读全文 <span aria-hidden="true">→</span></a>
+      {% assign year_groups = dated_articles | group_by_exp: 'post', "post.date | date: '%Y'" %}
+      {% for year_group in year_groups %}
+      <section class="article-year-group" aria-labelledby="article-year-{{ year_group.name }}" data-article-year-group>
+        <h3 class="article-year" id="article-year-{{ year_group.name }}">{{ year_group.name }}</h3>
+        <div class="article-year-entries">
+          {% for post in year_group.items %}
+          {% include article-entry.html article=post %}
+          {% endfor %}
         </div>
-      </article>
-      {% else %}
-      <p class="empty-state">还没有文章，过些时候再来看看。</p>
+      </section>
       {% endfor %}
+      {% if undated_articles.size > 0 %}
+      <section class="article-year-group" aria-labelledby="article-year-undated" data-article-year-group>
+        <h3 class="article-year" id="article-year-undated">未注明年份</h3>
+        <div class="article-year-entries">
+          {% for post in undated_articles %}
+          {% include article-entry.html article=post %}
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+      {% if articles.size == 0 %}<p class="empty-state">还没有文章，过些时候再来看看。</p>{% endif %}
     </div>
     <p class="empty-state" data-search-empty hidden>没有找到相关文章，试试其他关键词。</p>
     <p class="search-status sr-only" aria-live="polite" data-search-status></p>

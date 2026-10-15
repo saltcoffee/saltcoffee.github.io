@@ -25,7 +25,7 @@ summary: 去公园走了一圈，带上了相机。
 permalink: /articles/weekend-film/
 ```
 
-首页文章列表只显示日期、标签、标题和摘要，不展示封面。可选的 `cover: https://example.com/photo.jpg` 仅用于文章链接的分享预览。正文图片直接使用图床 URL，例如 `![描述](https://example.com/photo.jpg)`。查看器自动支持这些外链，不会把图片下载进仓库。本地图片地址也兼容。
+首页文章按年份倒序分组，每篇只显示标题和月日，点击标题阅读正文；未填写日期的文章单独归入「未注明年份」。搜索仍匹配正文、摘要和标签，并自动隐藏没有匹配结果的年份组。可选的 `cover: https://example.com/photo.jpg` 仅用于文章链接的分享预览。正文图片直接使用图床 URL，例如 `![描述](https://example.com/photo.jpg)`。查看器自动支持这些外链，不会把图片下载进仓库。本地图片地址也兼容。
 
 草稿增加 `published: false`，正式发布时移除。独立页面或隐私政策增加 `listed: false`，不进入文章列表、标签、RSS与相邻文章导航。长文可增加 `catalog: true` 自动生成目录。
 

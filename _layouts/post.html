@@ -3,18 +3,12 @@ layout: default
 ---
 <article class="post reading-shell">
   <header class="post-heading">
-    <a class="back-link" href="{{ '/' | relative_url }}">← 所有文章</a>
     {% include article-meta.html article=page %}
     <h1 tabindex="-1">{{ page.title | escape }}</h1>
     {% if page.subtitle %}<p class="post-subtitle">{{ page.subtitle | escape }}</p>{% endif %}
-    <p class="post-author">{{ page.author | default: site.title }}</p>
   </header>
   {% if page.catalog %}<nav class="post-toc" aria-label="文章目录" data-toc hidden><p>本文目录</p><ol></ol></nav>{% endif %}
   <div class="prose post-body" data-post-body>{{ content }}</div>
-  <footer class="post-end">
-    <span>{% if page.date and page.date != site.time %}写于 {{ page.date | date: '%Y 年 %-m 月 %-d 日' }} · {% endif %}{{ page.author | default: site.title }}</span>
-    <a href="#main">回到顶部 ↑</a>
-  </footer>
   {% include articles.html %}
   {% assign newer = nil %}
   {% assign older = nil %}

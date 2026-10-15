@@ -1,0 +1,6 @@
+<article class="article-entry" data-article data-search="{{ include.article.title | append: ' ' | append: include.article.subtitle | append: ' ' | append: include.article.summary | append: ' ' | append: include.article.content | strip_html | normalize_whitespace | escape }} {{ include.article.tags | join: ' ' | escape }} {% if include.article.date and include.article.date != site.time %}{{ include.article.date | date: '%Y.%m.%d' }}{% endif %}">
+  <h4 class="article-entry-title"><a href="{{ include.article.url | relative_url }}">{{ include.article.title | escape }}</a></h4>
+  {% if include.article.date and include.article.date != site.time %}
+  <time class="article-entry-date" datetime="{{ include.article.date | date_to_xmlschema }}" aria-label="{{ include.article.date | date: '%Y年%-m月%-d日' }}">{{ include.article.date | date: '%m.%d' }}</time>
+  {% endif %}
+</article>
