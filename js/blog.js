@@ -21,6 +21,12 @@
         text: normalizeSearch((element.getAttribute('data-search') || '') + ' ' + element.textContent)
       };
     });
+    var groups = Array.from(index.querySelectorAll('[data-article-year-group]')).map(function (element) {
+      return {
+        element: element,
+        entries: entries.filter(function (entry) { return element.contains(entry.element); })
+      };
+    });
     var composing = false;
 
     function updateResults() {
@@ -32,6 +38,9 @@
         var matches = words.every(function (word) { return entry.text.includes(word); });
         entry.element.hidden = !matches;
         if (matches) count += 1;
+      });
+      groups.forEach(function (group) {
+        group.element.hidden = !group.entries.some(function (entry) { return !entry.element.hidden; });
       });
       if (empty) empty.hidden = !words.length || count > 0;
       if (status) status.textContent = words.length ? '找到 ' + count + ' 篇文章' : '共 ' + count + ' 篇文章';

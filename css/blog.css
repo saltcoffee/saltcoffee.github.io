@@ -44,25 +44,26 @@ h1, h2, h3, p { margin: 0; }
 .header-search input::placeholder { color: var(--muted); opacity: 1; }
 .header-search button { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--accent); }
 .header-search button:hover { color: var(--ink); }
-.home-intro { padding: 44px 0 36px; }
+.home { padding-top: 52px; }
 .eyebrow { color: var(--muted); font-size: 12px; letter-spacing: .12em; margin-bottom: 21px; }
-.home-intro h1 { font: 500 clamp(26px, 3vw, 34px)/1.5 var(--sans); color: var(--ink); letter-spacing: -.015em; }
-.intro-description { font-size: 14px; line-height: 1.8; color: var(--muted); margin-top: 9px; }
-.writing { padding-bottom: 78px; }
+.writing { max-width: 900px; padding-bottom: 78px; }
 .section-bar { display: flex; align-items: baseline; gap: 16px; margin-bottom: 22px; }
 .section-bar h2 { font-size: 14px; font-weight: 500; color: var(--ink); }
 .article-count { margin-left: 8px; font: 11px var(--sans); color: var(--muted); vertical-align: middle; }
-.article-entry { padding: 28px 0 33px; border-bottom: 1px solid var(--line); }
-.article-entry:first-child { padding-top: 0; }
-.article-entry-copy { min-width: 0; max-width: 780px; padding: 8px 0; }
+.article-year-group { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 32px; padding-block: 24px; border-top: 1px solid var(--line); }
+.article-year-group:first-child { padding-top: 0; border-top: 0; }
+.article-year-group:last-child { padding-bottom: 0; }
+.article-year { padding-top: 10px; color: var(--muted); font: 500 14px/1.8 var(--sans); font-variant-numeric: tabular-nums; }
+.article-year-entries { min-width: 0; }
+.article-entry { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
+.article-entry-title { min-width: 0; margin: 0; font: 500 18px/1.65 var(--sans); color: var(--ink); overflow-wrap: anywhere; }
+.article-entry-title a { display: block; padding-block: 8px; }
+.article-entry-title a:hover { color: var(--accent); text-decoration: underline; }
+.article-entry-date { flex-shrink: 0; color: var(--muted); font: 12px/1.5 var(--sans); font-variant-numeric: tabular-nums; }
 .article-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; color: var(--muted); font-size: 12px; line-height: 1.4; }
 .article-meta time { font: 11px/1.5 var(--sans); letter-spacing: .02em; }
 .article-meta a { color: var(--accent); }
 .article-meta a:hover { text-decoration: underline; }
-.article-entry h3 { font: 600 26px/1.5 var(--sans); color: var(--ink); margin-top: 17px; letter-spacing: -.02em; text-wrap: pretty; }
-.article-entry h3 a:hover { color: var(--accent); }
-.article-summary { color: var(--muted); font-size: 14px; line-height: 1.9; margin: 15px 0 20px; }
-.article-subtitle { font-size: 14px; color: var(--muted); margin-top: 8px; }
 .read-link { display: inline-flex; align-items: center; gap: 12px; min-height: 40px; font-size: 13px; color: var(--accent); }
 .read-link span { font-size: 18px; transition: transform .15s ease; }
 .read-link:hover span { transform: translateX(3px); }
@@ -181,14 +182,14 @@ h1, h2, h3, p { margin: 0; }
   .wordmark-name { font-size: 25px; }
   .site-nav { gap: 16px; margin-left: auto; font-size: 13px; }
   .site-nav .nav-rss { padding: 8px; margin-right: -8px; }
-  .home-intro { padding-block: 32px 28px; }
-  .home-intro h1 { font-size: 26px; }
+  .home { padding-top: 34px; }
   .eyebrow { font-size: 11px; margin-bottom: 17px; }
-  .intro-description { font-size: 13px; margin-top: 8px; }
   .section-bar { margin-bottom: 18px; }
-  .article-entry-copy { padding: 0; }
-  .article-entry h3 { font-size: 23px; line-height: 1.5; margin-top: 13px; }
-  .article-summary { font-size: 14px; margin-block: 12px 14px; }
+  .article-year-group { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-block: 20px; }
+  .article-year { padding-top: 0; font-size: 13px; }
+  .article-entry { gap: 18px; }
+  .article-entry-title { font-size: 16px; }
+  .article-entry-date { font-size: 11px; }
   .article-meta { font-size: 11px; gap: 12px; }
   .article-meta time { font-size: 10px; }
   .writing { padding-bottom: 48px; }
@@ -227,7 +228,6 @@ h1, h2, h3, p { margin: 0; }
 }
 @media (max-width: 370px) {
   .site-nav { gap: 14px; }
-  .home-intro h1 { font-size: 24px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
