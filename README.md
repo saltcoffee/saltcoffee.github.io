@@ -96,6 +96,15 @@ bundle install
 bundle exec jekyll serve --host 127.0.0.1 --port 4000
 ```
 
+如果 `bundle` 报 Bundler 版本冲突，或 `vendor/gems` 中的 gem 与 `Gemfile.lock` 不一致，可以改用 `tools/` 下不依赖 Bundler 的脚本（它们直接使用 `vendor/gems`）：
+
+```sh
+ruby tools/build.rb          # 生成 _site，约 0.5 秒
+ruby tools/serve.rb 4000     # 托管 _site，打开 http://127.0.0.1:4000
+```
+
+`tools/serve.rb` 不做文件监听：改完内容运行一次 `ruby tools/build.rb`，再刷新浏览器即可，**不需要重启服务**。`bundle exec jekyll serve` 在本仓库不可用的原因是缺 `rb-inotify`，文件监听无法启动；`tools/serve.rb` 因此改成只托管构建结果。
+
 打开 http://127.0.0.1:4000 。只构建静态页面：
 
 ```sh
