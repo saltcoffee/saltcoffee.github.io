@@ -184,6 +184,8 @@ h1, h2, h3, p { margin: 0; }
 .about-link-icon { transition: transform .18s ease; }
 .about-link-arrow { color: var(--muted); opacity: .65; transition: transform .18s ease, opacity .18s ease; }
 .about-social-link:focus-visible .about-link-label::after { transform: scaleX(1); }
+.about-copyright { margin-top: 28px; font-size: 13px; line-height: 1.8; color: var(--accent); }
+.about-copyright h2 { margin-bottom: 8px; font-size: 14px; font-weight: 600; line-height: 1.7; color: var(--ink); }
 .about-wechat { width: 240px; max-width: 100%; padding-top: 6px; break-inside: avoid; }
 .about-wechat h2 { margin-bottom: 14px; font-size: 14px; font-weight: 600; line-height: 1.7; color: var(--ink); }
 .wechat-qr { display: block; width: 217px; max-width: 100%; border: 1px solid var(--line); border-radius: 4px; background: #fff; cursor: zoom-in; }
