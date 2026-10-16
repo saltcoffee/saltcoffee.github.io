@@ -1,0 +1,51 @@
+# 统一文本/二进制判定，避免不同编辑器保存后产生整文件 diff。
+#
+# 行尾策略：以 LF 为准（与 macOS / Linux 一致）。
+#   * 仓库索引里所有文本文件都存 LF（`git ls-files --eol` 中 i/crlf 为 0）
+#   * 这里不强制 eol，clone 到 macOS / Linux 直接就是 LF，与本地编辑器默认一致
+#   * Windows 上如需 CRLF，由各人自己的 core.autocrlf 决定，例如
+#       git config core.autocrlf true     # 检出 CRLF，入库 LF
+#       git config core.autocrlf input    # 检出与入库都保持 LF
+#
+# 说明：仓库在 Windows 上维护，但发布环境（GitHub Pages）与主要在用的 Mac 都是 LF。
+# kramdown 解析块级 HTML 时对 LF / CRLF 都能正确处理，两种行尾的渲染结果一致，
+# 因此不需要为了渲染而强制 CRLF。
+
+# 默认：自动识别文本，入库统一为 LF。
+* text=auto
+
+# 必须在 Unix 环境按 LF 执行的文件（Windows 上 clone 时也不会带 CRLF）。
+*.sh   text eol=lf
+*.bash text eol=lf
+
+# 二进制文件：不做行尾转换，也不参与文本 diff。
+# 用 **/ 前缀是为了同时匹配仓库根目录下的同名文件（例如 favicon.ico）。
+**/*.png   binary
+**/*.jpg   binary
+**/*.jpeg  binary
+**/*.gif   binary
+**/*.webp  binary
+**/*.avif  binary
+**/*.bmp   binary
+**/*.ico   binary
+**/*.icns  binary
+
+# 字体。
+**/*.woff  binary
+**/*.woff2 binary
+**/*.ttf   binary
+**/*.otf   binary
+**/*.eot   binary
+
+# 压缩包与归档。
+**/*.zip binary
+**/*.gz  binary
+**/*.tgz binary
+**/*.7z  binary
+**/*.rar binary
+
+# 其他不需要文本处理的资源。
+**/*.pdf    binary
+**/*.psd    binary
+**/*.ai     binary
+**/*.sketch binary
