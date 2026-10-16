@@ -29,7 +29,7 @@ permalink: /articles/weekend-film/
 
 草稿增加 `published: false`，正式发布时移除。独立页面或隐私政策增加 `listed: false`，不进入文章列表、标签、RSS与相邻文章导航。长文可增加 `catalog: true` 自动生成目录。
 
-原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。摄影文章位于 `_articles`，地址已改为 `/articles/2025年我用胶片拍了些什么/`；原来的日期地址通过 `redirects/film-2025.html` 自动跳转，保留查询参数和锚点。两份隐私政策保留原地址。
+原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。摄影文章位于 `_articles`，当前地址为 `/articles/2025-film-record/`；原来的日期地址和中文文章地址通过 `redirects/` 下的两个页面直接跳转到当前地址，启用 JavaScript 时保留查询参数和锚点。跳转页共用 `_layouts/redirect.html`，同时提供即时 meta refresh，方便不执行 JavaScript 的抓取工具识别迁移。两份隐私政策保留原地址。
 
 ## 搜索
 
