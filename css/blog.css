@@ -183,8 +183,6 @@ h1, h2, h3, p { margin: 0; }
 .about-link-label::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .18s ease; }
 .about-link-icon { transition: transform .18s ease; }
 .about-link-arrow { color: var(--muted); opacity: .65; transition: transform .18s ease, opacity .18s ease; }
-.about-email-link { color: var(--muted); font-size: 12px; }
-.about-email-link:hover { color: var(--accent); text-decoration: underline; }
 .about-social-link:focus-visible .about-link-label::after { transform: scaleX(1); }
 .about-wechat { width: 240px; max-width: 100%; padding-top: 6px; break-inside: avoid; }
 .about-wechat h2 { margin-bottom: 14px; font-size: 14px; font-weight: 600; line-height: 1.7; color: var(--ink); }
@@ -252,7 +250,6 @@ h1, h2, h3, p { margin: 0; }
 }
 @media (hover: hover) {
   .about-social-link:hover { color: var(--ink); }
-  .about-social-link-instagram:hover { color: #78567f; }
   .about-social-link:hover .about-link-label::after { transform: scaleX(1); }
   .about-social-link:hover .about-link-icon { transform: translateY(-1px); }
   .about-social-link:hover .about-link-arrow { transform: translate(1px, -1px); opacity: 1; }
