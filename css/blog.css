@@ -142,6 +142,10 @@ h1, h2, h3, p { margin: 0; }
 .film-photo img { width: 100%; height: auto; border-radius: 2px; background: var(--wash); }
 .film-photo figcaption { display: flex; justify-content: space-between; color: var(--muted); font: 10px/1.5 var(--sans); margin-top: 10px; letter-spacing: .06em; }
 .image-fallback { display: block; background: var(--wash); color: var(--muted); padding: 35px; text-align: center; font-size: 13px; }
+/* 配图：正文里的吐槽写在 figcaption 中，图片查看器也会读取这段文字。 */
+.photo-note { margin: 32px 0; }
+.photo-note img { width: 100%; height: auto; border-radius: 2px; background: var(--wash); }
+.photo-note figcaption { color: var(--muted); font: 14px/1.7 var(--sans); margin-top: 10px; text-align: center; text-wrap: pretty; }
 .post-end { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); margin-top: 52px; padding-top: 24px; font-size: 11px; color: var(--muted); }
 .post-end a:hover { color: var(--accent); }
 .post-pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 45px; }
