@@ -28,6 +28,16 @@
   <meta property="og:title" content="{{ page.title | default: site.SEOTitle | escape }}">
   <meta property="og:description" content="{{ meta_description | strip_html | normalize_whitespace | escape }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
+  {% if page.url == '/' %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ site.SEOTitle | jsonify }},
+      "url": {{ '/' | absolute_url | jsonify }}
+    }
+  </script>
+  {% endif %}
   {% if page.cover %}<meta property="og:image" content="{{ page.cover | absolute_url }}">{% endif %}
   <link rel="stylesheet" href="{{ '/css/blog.css' | relative_url }}?v={{ site.asset_version | escape }}">
   <link rel="stylesheet" href="{{ '/css/syntax.css' | relative_url }}?v={{ site.asset_version | escape }}">

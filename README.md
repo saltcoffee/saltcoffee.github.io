@@ -87,6 +87,8 @@ Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认�
 
 发布后确认 https://blog.redpencil.top/sitemap.xml 可以打开，再在 Google Search Console 的 `https://blog.redpencil.top/` 资源中进入「站点地图」，提交 `sitemap.xml`。后续发布文章会自动更新地图，通常不需要重新提交。Google 所有权验证文件必须继续保留。
 
+搜索结果顶部的网站名称通过首页的 `WebSite` JSON-LD 声明：`name` 使用 `_config.yml` 的 `SEOTitle`，`url` 使用正式首页地址，与现有标题和 `og:site_name` 保持一致。发布后可在 Search Console 中检查首页并请求重新编入索引，等待 Google 重新抓取与处理。这个声明表达首选名称，最终是否采用及更新时间由 Google 决定；不会改变搜索结果中显示的网址。规范见 [Google 网站名称文档](https://developers.google.com/search/docs/appearance/site-names?hl=zh-cn)。
+
 ## 本地预览
 
 使用 Ruby 3.1 或更新版本，并安装 Bundler：
