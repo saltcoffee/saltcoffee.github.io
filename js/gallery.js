@@ -2,7 +2,7 @@
   'use strict';
 
   var supported = typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal === 'function';
-  var viewer, stage, photo, preview, message, title, counter, caption, previous, next, thumbnails, zoom, fullscreen, close;
+  var viewer, stage, photo, message, title, counter, caption, previous, next, thumbnails, zoom, fullscreen, close;
   var album = [], index = 0, token = 0, dimensions = null, savedStyle, scrollPosition, opener;
   var ownsFullscreen = false, fullscreenPending = false, exitPending = false, relayering = false, sessionOpen = false;
   var lastWheel = 0, suppressClickUntil = 0, touchStart, thumbnailObserver;
@@ -79,7 +79,6 @@
     sessionOpen = false;
     ++token;
     viewer.hidden = true;
-    preview.hidden = true;
     setZoom(false);
     if (thumbnailObserver) thumbnailObserver.disconnect();
     leaveFullscreen();
@@ -164,35 +163,6 @@
     return cached;
   }
 
-  // 原图 5–9MB，直接等要很久；先把网格里已经下好的缩略图放大顶上，
-  // 原图在后台继续下载，到位后再无缝替换。
-  function showPreview(item) {
-    var source = item.thumbnail;
-    if (!source || source === item.source) {
-      preview.hidden = true;
-      preview.removeAttribute('src');
-      return false;
-    }
-    preview.src = source;
-    preview.hidden = false;
-    return true;
-  }
-
-  function prefetch(position) {
-    if (position < 0 || position >= album.length) return;
-    var item = album[position];
-    if (!item || !usable(item)) return;
-    cachedImage(item.source);
-  }
-
-  // 当前这张到位后，顺手把前后几张的原图拉进缓存，翻页就不用干等。
-  function prefetchNeighbours(position) {
-    if (navigator.connection && navigator.connection.saveData) return;
-    prefetch(position + 1);
-    prefetch(position + 2);
-    prefetch(position - 1);
-  }
-
   function showImage(position) {
     if (position < 0 || position >= album.length) return;
     index = position;
@@ -210,12 +180,9 @@
     photo.style.width = '';
     photo.style.height = '';
     photo.hidden = true;
+    message.replaceChildren(document.createTextNode('照片加载中…'));
+    message.hidden = false;
     stage.setAttribute('aria-busy', 'true');
-    if (showPreview(item)) message.hidden = true;
-    else {
-      message.replaceChildren(document.createTextNode('照片加载中…'));
-      message.hidden = false;
-    }
     counter.textContent = (index + 1) + ' / ' + album.length;
     caption.textContent = item.caption;
     previous.disabled = index === 0;
@@ -232,18 +199,15 @@
       stage.setAttribute('aria-busy', 'false');
       if (success) {
         dimensions = { width: photo.naturalWidth, height: photo.naturalHeight };
-        preview.hidden = true;
         photo.hidden = false;
         message.hidden = true;
         updateZoom();
-        prefetchNeighbours(index);
       } else {
         var link = element('a', '', '打开原图');
         link.href = item.source;
         link.target = '_blank';
         link.rel = 'noopener';
         message.replaceChildren(document.createTextNode('这张照片未能加载。 '), link);
-        message.hidden = false;
       }
     }
     if (cached.state === 'loaded') finish(true);
@@ -274,16 +238,11 @@
     next = button('next', '›', function () { showImage(index + 1); });
     next.setAttribute('aria-label', '下一张照片');
     stage = element('div', 'photo-viewer__stage');
-    preview = element('img', 'photo-viewer__preview');
-    preview.alt = '';
-    preview.draggable = false;
-    preview.hidden = true;
-    preview.addEventListener('error', function () { preview.hidden = true; });
     photo = element('img', 'photo-viewer__image');
     photo.draggable = false;
     message = element('p', 'photo-viewer__message');
     message.setAttribute('role', 'status');
-    stage.append(preview, photo, message);
+    stage.append(photo, message);
     thumbnails = element('nav', 'photo-viewer__thumbnails');
     thumbnails.setAttribute('aria-label', '照片缩略图');
     body.append(previous, stage, next, thumbnails);

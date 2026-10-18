@@ -4,7 +4,7 @@
 const SITE_ROOT = new URL(self.registration.scope);
 const CACHE_PREFIX = 'guagua-blog:' + SITE_ROOT.pathname + ':';
 // Keep this value in sync with asset_version in _config.yml.
-const ASSET_VERSION = '2026-10-18-v32';
+const ASSET_VERSION = '2026-10-18-v34';
 const CACHE_NAME = CACHE_PREFIX + ASSET_VERSION;
 // Photo storage survives CSS/JS releases; metadata keeps its original response intact.
 const IMAGE_CACHE_NAME = CACHE_PREFIX + 'images-v1';
