@@ -29,7 +29,7 @@ permalink: /articles/weekend-film/
 
 草稿增加 `published: false`，正式发布时移除。独立页面或隐私政策增加 `listed: false`，不进入文章列表、标签、RSS与相邻文章导航。长文可增加 `catalog: true` 自动生成目录。
 
-原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。摄影文章位于 `_articles`，地址已改为 `/articles/2025年我用胶片拍了些什么/`；原来的日期地址通过 `redirects/film-2025.html` 自动跳转，保留查询参数和锚点。两份隐私政策保留原地址。
+原来的 `_posts/YYYY-MM-DD-标题.md` 仍然可用。摄影文章位于 `_articles`，当前地址为 `/articles/2025-film-record/`；原来的日期地址和中文文章地址通过 `redirects/` 下的两个页面直接跳转到当前地址，启用 JavaScript 时保留查询参数和锚点。跳转页共用 `_layouts/redirect.html`，同时提供即时 meta refresh，方便不执行 JavaScript 的抓取工具识别迁移。两份隐私政策保留原地址。
 
 ## 搜索
 
@@ -86,6 +86,8 @@ Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认�
 每次构建会自动生成根目录的 `sitemap.xml` 和 `robots.txt`，使用 `_config.yml` 中的正式域名。站点地图包含首页、关于页、标签页及已发布文章，排除 Google 验证文件、404 页、离线页和旧地址跳转页。需要单独排除某篇文章或页面时，在 front matter 中添加 `sitemap: false`；`listed: false` 只影响文章列表、标签和 RSS，不控制搜索收录。
 
 发布后确认 https://blog.redpencil.top/sitemap.xml 可以打开，再在 Google Search Console 的 `https://blog.redpencil.top/` 资源中进入「站点地图」，提交 `sitemap.xml`。后续发布文章会自动更新地图，通常不需要重新提交。Google 所有权验证文件必须继续保留。
+
+搜索结果顶部的网站名称通过首页的 `WebSite` JSON-LD 声明：`name` 使用 `_config.yml` 的 `SEOTitle`，`url` 使用正式首页地址，与现有标题和 `og:site_name` 保持一致。发布后可在 Search Console 中检查首页并请求重新编入索引，等待 Google 重新抓取与处理。这个声明表达首选名称，最终是否采用及更新时间由 Google 决定；不会改变搜索结果中显示的网址。规范见 [Google 网站名称文档](https://developers.google.com/search/docs/appearance/site-names?hl=zh-cn)。
 
 ## 本地预览
 
