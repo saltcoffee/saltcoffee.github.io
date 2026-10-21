@@ -85,7 +85,7 @@ Twikoo 后台的隐私设置 `SHOW_UA` 控制系统和浏览器信息，默认�
 
 每次构建会自动生成根目录的 `sitemap.xml` 和 `robots.txt`，使用 `_config.yml` 中的正式域名。站点地图包含首页、关于页、标签页及已发布文章，排除 Google 验证文件、404 页、离线页和旧地址跳转页。需要单独排除某篇文章或页面时，在 front matter 中添加 `sitemap: false`；`listed: false` 只影响文章列表、标签和 RSS，不控制搜索收录。
 
-发布后确认 https://blog.redpencil.top/sitemap.xml 可以打开，再在 Google Search Console 的 `https://blog.redpencil.top/` 资源中进入「站点地图」，提交 `sitemap.xml`。后续发布文章会自动更新地图，通常不需要重新提交。Google 所有权验证文件必须继续保留。
+发布后确认 https://blog.twomelon.com/sitemap.xml 可以打开，再在 Google Search Console 中添加并验证 `https://blog.twomelon.com/` 资源，进入「站点地图」提交 `sitemap.xml`。后续发布文章会自动更新地图，通常不需要重新提交。仓库已有 Google 验证文件，但新资源仍需在 Search Console 中确认所有权，按其提示补充验证。
 
 搜索结果顶部的网站名称通过首页的 `WebSite` JSON-LD 声明：`name` 使用 `_config.yml` 的 `SEOTitle`，`url` 使用正式首页地址，与现有标题和 `og:site_name` 保持一致。发布后可在 Search Console 中检查首页并请求重新编入索引，等待 Google 重新抓取与处理。这个声明表达首选名称，最终是否采用及更新时间由 Google 决定；不会改变搜索结果中显示的网址。规范见 [Google 网站名称文档](https://developers.google.com/search/docs/appearance/site-names?hl=zh-cn)。
 
@@ -118,6 +118,44 @@ bundle exec jekyll build
 ## GitHub Pages
 
 沿用当前仓库的 GitHub Pages 发布方式；提交并推送后由 GitHub 构建。无需切换托管平台或额外配置工作流。
+
+### 域名迁移到 blog.twomelon.com
+
+仓库中的 `CNAME` 已设为 `blog.twomelon.com`，`_config.yml` 的 `url` 已设为 `https://blog.twomelon.com`，`baseurl` 保持为空。构建时 canonical、Open Graph、首页结构化数据、RSS、站点地图与 robots.txt 都从这一配置生成正式地址。文章路径和 Twikoo 的评论路径保持不变，已有评论继续按原路径关联。
+
+图床来自独立的 [saltcoffee/pic_bed](https://github.com/saltcoffee/pic_bed) GitHub Pages 项目站点，文章统一通过 `/pic_bed/...` 访问。《还没有吹过太平洋的风》的明信片图片也已改为这一形式。未单独配置自定义域名的项目站点会自动沿用账户站点的域名，因此无需把图片复制进博客仓库；切换后仍需确认 `https://blog.twomelon.com/pic_bed/blog/tw_mingxinpian.jpg` 与胶片文章的照片均可访问。[GitHub 多仓库域名说明](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages#using-a-custom-domain-across-multiple-repositories)
+
+以下线上操作需要在对应账户完成，仓库内的修改不会代替这些操作：
+
+1. 建议先在 [GitHub 个人设置 → Pages](https://github.com/settings/pages) 添加并验证 `twomelon.com`。将 GitHub 提供的 TXT 记录添加到 Cloudflare，记录名为 `_github-pages-challenge-saltcoffee`，记录值以 GitHub 实际显示为准，验证后保留记录。验证根域名也会保护 `blog.twomelon.com`。[GitHub 域名验证说明](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages)
+2. 自行提交并推送本次修改，等待 GitHub Pages 部署完成。本次配置修改未提交、未推送。
+3. 打开[仓库 Settings → Pages](https://github.com/saltcoffee/saltcoffee.github.io/settings/pages)，确认 Custom domain 为 `blog.twomelon.com`，不带协议或路径；如果没有自动更新，手动填写并保存。分支发布时，GitHub 网页保存域名可能会生成修改 `CNAME` 的提交，之后需同步本地仓库。
+4. 在 Cloudflare 的 `twomelon.com` → DNS → Records 中添加或确认下表记录。只配置 `blog`，根域名和 `www` 无需指向博客。先使用 DNS only，让 GitHub 直接验证 DNS 并签发证书。[GitHub 子域名配置说明](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
+
+   | 类型 | 名称 | 目标 | 代理状态 | TTL |
+   | --- | --- | --- | --- | --- |
+   | CNAME | `blog` | `saltcoffee.github.io` | DNS only（灰云） | Auto |
+
+5. 等待 GitHub Pages 的 DNS 检查和证书签发完成，勾选 Enforce HTTPS。该选项可能需要最多 24 小时才可用。
+6. 新域名正常后，在旧域名的托管平台设置从 `blog.redpencil.top` 到新域名的 301 跳转，保留文章路径和查询参数。若旧域名也托管于 Cloudflare，可在 `redpencil.top` → Rules → Redirect Rules 创建动态规则（旧域名对应的 DNS 记录必须开启代理）：
+
+   匹配条件：
+
+   ```text
+   (http.host eq "blog.redpencil.top")
+   ```
+
+   动态目标表达式：
+
+   ```text
+   concat("https://blog.twomelon.com", http.request.uri.path)
+   ```
+
+   状态码选 `301`，开启 Preserve query string。先确认新域名下的 `/pic_bed/` 图片可用，再启用整站跳转，让旧文章链接与旧图片链接一起迁移。[Cloudflare 跳转配置说明](https://developers.cloudflare.com/fundamentals/manage-domains/redirect-domain/)
+7. 检查 Twikoo 后端：如果配置过站点地址或通知中的站点链接，更新为新域名。2026-10-21 对现有 Netlify 服务的 OPTIONS 预检已返回 `204` 且允许 `https://blog.twomelon.com`；正式切换后仍需实际验证评论加载，如果被后端域名限制拦截，再将新域名加入允许列表。前端继续使用现有 Netlify 服务，无需迁移评论数据库。
+8. 在 Google Search Console 添加并验证新资源，提交新站点地图；旧资源可用时，按「地址更改」流程申报迁移。此操作应在 301 跳转生效后进行。
+
+迁移后检查：首页、文章、关于页、评论、`/pic_bed/` 图床图片、`/feed.xml`、`/sitemap.xml` 和 `/robots.txt` 均可正常访问；canonical 和 RSS 的正式地址使用新域名，旧文章 URL 以 301 跳转到新域名相同路径。若曾安装旧域名的 PWA，需要从新域名重新安装；浏览器不会跨域迁移其离线缓存。
 
 如果发布在项目子路径（例如 `/blog`），在 `_config.yml` 设置 `baseurl: /blog`，并把 `url` 保持为域名。本站导航、图片、订阅、离线缓存使用相对路径过滤器适配子路径。
 
