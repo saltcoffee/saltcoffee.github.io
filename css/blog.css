@@ -278,6 +278,9 @@ h1, h2, h3, p { margin: 0; }
 .post-comments { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
 .post-comments h2 { margin-bottom: 18px; font-size: 18px; font-weight: var(--title-weight); color: var(--ink); }
 .post-comments .twikoo { max-width: 100%; margin-inline: 0; color: var(--v2ex-text); font: 14px/1.7 var(--sans); }
+/* Twikoo 会在评论区末尾渲染“Powered by Twikoo v2.0.13”署名，站点不展示。
+   客户端版本变化时类名可能不同，js/blog.js 会对同一页脚再做一次隐藏。 */
+.post-comments .twikoo .tk-footer { display: none; }
 /* Twikoo 偏粗的两个来源：
    1) 自带 4 处 font-weight（.tk-comments-title 700 = 「N 条评论」，
       .el-button 系列的 500 影响「预览」按钮，input-group 附加块影响表单标签）；

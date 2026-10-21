@@ -193,26 +193,47 @@
       });
     }
 
+    // 评论区末尾由 Twikoo 渲染“Powered by Twikoo v2.0.13”署名。
+    // 样式已隐藏 .tk-footer；这里再兜底，类名随版本变化时也不会露出文字。
+    function hideTwikooBranding() {
+      container.querySelectorAll('.tk-footer').forEach(function (footer) {
+        footer.style.display = 'none';
+      });
+      container.querySelectorAll('a[href*="twikoo.js.org"]').forEach(function (link) {
+        var footer = link.closest('.tk-footer') || link.parentElement;
+        if (!footer || footer === container) return;
+        // 只隐藏整段都在说 Twikoo 的页脚，避免误伤评论里引用官网的链接。
+        if (/^\s*(?:Powered\s+by\s+)?Twikoo(?:\s+v?\d[\w.-]*)?\s*$/i.test(footer.textContent)) {
+          footer.style.display = 'none';
+        }
+      });
+    }
+
+    function normalizeComments() {
+      normalizeSystemLabels();
+      hideTwikooBranding();
+    }
+
     // Twikoo 会在提交、刷新和加载更多时更新 DOM；同时处理局部重绘。
     if (typeof window.MutationObserver === 'function') {
       var scheduled = false;
-      var labelSelector = '.tk-extras .tk-extra-text';
+      var commentSelector = '.tk-extras .tk-extra-text, .tk-footer, a[href*="twikoo.js.org"]';
       var observer = new window.MutationObserver(function (records) {
-        var labelsChanged = records.some(function (record) {
+        var commentsChanged = records.some(function (record) {
           if (record.type === 'characterData') {
             var parent = record.target.parentElement;
-            return parent && parent.matches(labelSelector);
+            return parent && parent.matches('.tk-extras .tk-extra-text');
           }
-          if (record.target.nodeType === 1 && record.target.matches(labelSelector)) return true;
+          if (record.target.nodeType === 1 && record.target.matches(commentSelector)) return true;
           return Array.from(record.addedNodes).some(function (node) {
-            return node.nodeType === 1 && (node.matches(labelSelector) || node.querySelector(labelSelector));
+            return node.nodeType === 1 && (node.matches(commentSelector) || node.querySelector(commentSelector));
           });
         });
-        if (!labelsChanged || scheduled) return;
+        if (!commentsChanged || scheduled) return;
         scheduled = true;
         window.requestAnimationFrame(function () {
           scheduled = false;
-          normalizeSystemLabels();
+          normalizeComments();
         });
       });
       observer.observe(container, { childList: true, subtree: true, characterData: true });
@@ -244,7 +265,7 @@
         el: '#twikoo-comments',
         path: path,
         lang: container.dataset.lang || 'zh-CN',
-        onCommentLoaded: normalizeSystemLabels
+        onCommentLoaded: normalizeComments
       };
       // region 只对腾讯云环境有意义，Netlify 等完整地址部署不能传。
       if (!/^https?:\/\//i.test(envId) && container.dataset.region) {
@@ -254,6 +275,7 @@
         Promise.resolve(window.twikoo.init(options)).then(function () {
           loading = false;
           container.setAttribute('aria-busy', 'false');
+          normalizeComments();
           // 挂载后，评论请求的加载与错误提示由 Twikoo 自己处理。
           if (status) status.hidden = true;
           if (retry) retry.hidden = true;
