@@ -4,7 +4,7 @@
 const SITE_ROOT = new URL(self.registration.scope);
 const CACHE_PREFIX = 'guagua-blog:' + SITE_ROOT.pathname + ':';
 // Keep this value in sync with asset_version in _config.yml.
-const ASSET_VERSION = '2026-10-19-v35';
+const ASSET_VERSION = '2026-10-25-v36';
 const CACHE_NAME = CACHE_PREFIX + ASSET_VERSION;
 // Photo storage survives CSS/JS releases; metadata keeps its original response intact.
 const IMAGE_CACHE_NAME = CACHE_PREFIX + 'images-v1';
@@ -119,6 +119,9 @@ async function storeImageResponse(request, response) {
   if (!canCacheImage(request, response)) return;
   // Clone before returning the live response; cache writes use event.waitUntil().
   const copy = response.clone();
+  // Finish this download outside the storage queue. Holding the queue while a
+  // body streams would block unrelated photos, including already cached ones.
+  await copy.clone().arrayBuffer();
   await imageCacheOperation(async () => {
     let cache;
     let metadata;

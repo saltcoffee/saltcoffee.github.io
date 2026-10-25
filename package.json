@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "bundle exec jekyll serve --host 127.0.0.1 --port 4000",
     "preview": "bundle exec jekyll serve --host 127.0.0.1 --port 4000",
-    "build": "bundle exec jekyll build"
+    "build": "bundle exec jekyll build",
+    "test": "node --test tests/*.test.cjs"
   }
 }

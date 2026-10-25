@@ -7,6 +7,7 @@
   var ownsFullscreen = false, fullscreenPending = false, exitPending = false, relayering = false, sessionOpen = false;
   var lastWheel = 0, suppressClickUntil = 0, touchStart, thumbnailObserver;
   var imageCache = new Map(), imageCacheLimit = 12, thumbnailAlbum = [];
+  var requestedImages = new Set(), backgroundLimit = 2;
 
   function element(tag, name, text) {
     var node = document.createElement(tag);
@@ -127,22 +128,31 @@
     });
   }
 
-  function cachedImage(source) {
+  function trimImageMemory(source) {
+    imageCache.forEach(function (entry, url) {
+      if (imageCache.size > imageCacheLimit && entry.state !== 'loading' && entry.image !== photo && url !== source) imageCache.delete(url);
+    });
+  }
+
+  function cachedImage(source, priority) {
     var cached = imageCache.get(source);
     if (cached) {
       // Keep the most recently viewed images, including loads still in flight.
       imageCache.delete(source);
       imageCache.set(source, cached);
+      cached.image.fetchPriority = priority;
       return cached;
     }
     var image = new Image(), resolveReady;
     image.className = 'photo-viewer__image';
     image.draggable = false;
     image.decoding = 'async';
+    image.fetchPriority = priority;
     image.hidden = true;
     cached = { image: image, state: 'loading' };
     cached.ready = new Promise(function (resolve) { resolveReady = resolve; });
     imageCache.set(source, cached);
+    requestedImages.add(source);
     function finish(success) {
       if (cached.state !== 'loading') return;
       success = success && image.naturalWidth > 0;
@@ -150,17 +160,30 @@
       image.onload = null;
       image.onerror = null;
       if (!success && imageCache.get(source) === cached) imageCache.delete(source);
+      trimImageMemory(source);
       resolveReady(success);
+      Promise.resolve().then(preloadImages);
     }
     image.onload = function () { finish(true); };
     image.onerror = function () { finish(false); };
     image.src = source;
     if (image.complete) finish(image.naturalWidth > 0);
-    // Bound decoded image memory without discarding the displayed photo.
-    imageCache.forEach(function (entry, url) {
-      if (imageCache.size > imageCacheLimit && entry.image !== photo && url !== source) imageCache.delete(url);
-    });
+    // Keep active requests so selecting a background photo reuses its download.
+    trimImageMemory(source);
     return cached;
+  }
+
+  function preloadImages() {
+    if (!sessionOpen || !viewer.open) return;
+    var backgroundLoads = 0;
+    imageCache.forEach(function (entry) {
+      if (entry.state === 'loading' && entry.image !== photo) backgroundLoads++;
+    });
+    for (var offset = 1; offset < album.length && backgroundLoads < backgroundLimit; offset++) {
+      var item = album[(index + offset) % album.length];
+      if (!usable(item) || requestedImages.has(item.source)) continue;
+      if (cachedImage(item.source, 'low').state === 'loading') backgroundLoads++;
+    }
   }
 
   function showImage(position) {
@@ -171,7 +194,8 @@
     setZoom(false);
     updateZoom();
     photo.hidden = true;
-    var cached = cachedImage(item.source);
+    imageCache.forEach(function (entry) { entry.image.fetchPriority = 'low'; });
+    var cached = cachedImage(item.source, 'high');
     if (photo !== cached.image) {
       photo.replaceWith(cached.image);
       photo = cached.image;
@@ -203,16 +227,19 @@
         message.hidden = true;
         updateZoom();
       } else {
+        var retry = button('retry', '重试', function () { showImage(index); });
         var link = element('a', '', '打开原图');
         link.href = item.source;
         link.target = '_blank';
         link.rel = 'noopener';
-        message.replaceChildren(document.createTextNode('这张照片未能加载。 '), link);
+        message.replaceChildren(document.createTextNode('这张照片未能加载。'), retry, link);
       }
     }
     if (cached.state === 'loaded') finish(true);
     else if (cached.state === 'failed') finish(false);
     else cached.ready.then(finish);
+    // Each original completes independently; background work never gates display.
+    preloadImages();
   }
 
   function buildViewer() {
@@ -322,6 +349,7 @@
         preview.alt = '';
         preview.loading = 'lazy';
         preview.decoding = 'async';
+        preview.fetchPriority = 'low';
         preview.dataset.src = item.thumbnail;
         preview.onerror = function () { preview.removeAttribute('src'); };
         if (!thumbnailObserver) preview.src = item.thumbnail;
