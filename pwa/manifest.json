@@ -10,11 +10,11 @@ layout: null
   "start_url": "../",
   "scope": "../",
   "icons": [{
-    "src": "icons/128.png?v={{ site.asset_version | url_encode }}",
+    "src": "icons/128.png",
     "sizes": "128x128",
     "type": "image/png"
   }, {
-    "src": "icons/512.png?v={{ site.asset_version | url_encode }}",
+    "src": "icons/512.png",
     "sizes": "512x512",
     "type": "image/png"
   }],
